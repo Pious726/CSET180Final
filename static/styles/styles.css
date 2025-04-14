@@ -66,8 +66,16 @@ header {
     color: var(--textColor);
 }
 
+.navlist a:hover {
+    color: var(--accentGreen);
+}
+
 /* Styles for footer */
 footer {
     background-color: var(--secondaryColor);
     font-size: 14px;
+}
+
+img {
+    max-width: 100%;
 }
