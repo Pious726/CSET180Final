@@ -79,3 +79,14 @@ footer {
 img {
     max-width: 100%;
 }
+.header-image {
+    background-image: url('../Images/minecraft-movie-theatrical-trailer-banner.jpg');
+    height: 100vh;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    z-index: 1;
+}
+
