@@ -56,6 +56,16 @@ a {
 header {
     background-color: var(--secondaryColor);
 }
+.header-image {
+    background-image: url('../Images/minecraft-movie-theatrical-trailer-banner.jpg');
+    height: 100vh;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    z-index: 1;
+}
 
 /* Styles for nav */
 .navlist {
@@ -72,6 +82,10 @@ header {
     color: var(--textColor);
 }
 
+.navlist a:hover {
+    color: var(--accentGreen);
+}
+
 /* Styles for footer */
 footer {
     background-color: var(--secondaryColor);
@@ -85,3 +99,4 @@ footer {
     font-size: 10px;
     text-align: center;
 }
+
