@@ -37,6 +37,9 @@ body {
 }
 .flex {
     display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 h1 {
     font-size: 36px;
@@ -46,7 +49,7 @@ h2 {
     font-size: 24px;
 }
 p {
-    font-size: 20px;
+    font-size: 16px;
 }
 a {
     color: var(--accentGreen);
@@ -68,10 +71,12 @@ header {
 }
 
 /* Styles for nav */
+nav {
+    padding: 20px 0;
+}
 .navlist {
     display: flex;
     justify-content: space-evenly;
-    margin: 20px 0;
 }
 .navlist li {
     list-style-type: none;
@@ -90,13 +95,44 @@ header {
 footer {
     background-color: var(--secondaryColor);
     font-size: 14px;
-    padding: 15px 0;
+}
+.socials {
+    padding: 20px 0;
+}
+.social-icons ion-icon {
+    color: var(--textColor);
+    font-size: 40px;
+    margin: 0 10px;
+}
+.social-icons ion-icon:hover {
+    color: var(--accentGreen)
+}
+.footer-links {
+    padding: 20px 0;
+}
+.footer-links input {
+    padding: 5px;
+    margin-top: 3px;
+    border: 2px solid var(--accentGreen);
+    background-color: var(--secondaryColor);
+    color: var(--textColor);
+}
+.footer-links.flex {
+    justify-content: space-evenly;
+    align-items: start;
+}
+.socials {
+    background-color: #000;
+    text-align: center;
 }
 .f-navlist {
     margin-bottom: 5px;
+    list-style-type: none;
 }
 .copyright {
-    font-size: 10px;
+    padding-bottom: 20px;
     text-align: center;
 }
-
+.copyright p {
+    font-size: 10px;
+}

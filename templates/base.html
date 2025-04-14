@@ -18,44 +18,59 @@
                 <li><a href="accounts.html">MY ACCOUNT</a></li>
                 <li><a href="orders.html">MY ORDERS</a></li>
                 <li><a href="cart.html">CART</a></li>
-                <li><a href="return.html">RETURNS</a></li>
-                <li><a href="chat.html">CHAT</a></li>
             </ul>
-
         </nav>
+
         <div class="header-image"></div>
     </header>
 
     {% block body %}
-    {% endblock%}
+    {% endblock %}
 
     <footer>
-        <div class="container flex">
-            <div class="footer-nav">
-                <h2>Quick Links</h2>
-                <ul class="f-navlist">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="shop.html">Shop</a></li>
-                    <li><a href="accounts.html">My Account</a></li>
-                    <li><a href="orders.html">My Orders</a></li>
-                    <li><a href="cart.html">Cart</a></li>
-                </ul>
+        <div class="container">
+            <div class="socials">
+                <p>Follow us here!</p>
+                <div class="social-icons flex">
+                    <a href="https://www.facebook.com/minecraft"><ion-icon name="logo-facebook"></ion-icon></a>
+                    <a href="https://x.com/minecraft"><ion-icon name="logo-twitter"></ion-icon></a>
+                    <a href="https://www.instagram.com/minecraft/"><ion-icon name="logo-instagram"></ion-icon></a>
+                    <a href="https://www.youtube.com/Minecraft"><ion-icon name="logo-youtube"></ion-icon></a>
+                </div>
             </div>
-            <div class="footer-nav">
-                <h2>Quick Links</h2>
-                <ul class="f-navlist">
-                    <li><a href="return.html">Returns</a></li>
-                    <li><a href="chat.html">Chat</a></li>
-                </ul>
+
+            <div class="footer-links flex">
+                <div class="quick-links">
+                    <h2>Quick Links</h2>
+                    <ul class="f-navlist">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="shop.html">Shop</a></li>
+                        <li><a href="accounts.html">My Account</a></li>
+                        <li><a href="orders.html">My Orders</a></li>
+                        <li><a href="cart.html">Cart</a></li>
+                    </ul>
+                </div>
+                <div class="customer-service">
+                    <h2>Customer Service</h2>
+                    <ul class="f-navlist">
+                        <li><a href="return.html">Returns</a></li>
+                        <li><a href="chat.html">Chat</a></li>
+                    </ul>
+                </div>
+                <div class="newsletter">
+                    <h2>Newsletter</h2>
+                    <p>Sign up here for emails about our shop!</p>
+                    <input type="email" placeholder="Email Address">
+                </div>
             </div>
-            <div class="newsletter">
-                <h2>Newsletter</h2>
-                <p>Sign up here for emails about our shop!</p>
-                <input type="email">
+
+            <div class="copyright">
+                <p>Copyright &copy; 2025 All right reserved. Created by Tyler McDowell and Ryan Sweeney.</p>
             </div>
         </div>
-        
-        <p class="copyright">Copyright &copy; 2025 All right reserved. Created by Tyler McDowell and Ryan Sweeney.</p>
     </footer>
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
 </html>

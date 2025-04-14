@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, url_for, redirect
 from sqlalchemy import create_engine, text
-import random
 import bcrypt
  
 app = Flask(__name__)
