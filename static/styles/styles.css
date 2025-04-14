@@ -16,7 +16,9 @@
 html {
     background-color: var(--backgroundColor);
     color: var(--textColor);
-    font-family: ;
+    font-family: "Noto Sans", sans-serif;
+    font-weight: 400;
+    font-style: normal;
     font-size: 20px;
 }
 body {
@@ -25,10 +27,12 @@ body {
     flex-direction: column;
 }
 h1 {
-
+    font-size: 36px;
+    font-weight: 400;
 }
 h2 {
-
+    font-size: 24px;
+    font-weight: 400;
 }
 
 /* Styles for header and footer */
