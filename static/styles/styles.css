@@ -7,7 +7,11 @@
     box-sizing: border-box;
 }
 :root {
-    --backgroundColor: #fff;
+    --backgroundColor: #313131;
+    --secondaryColor: #171615;
+    --accentGreen: #87D671;
+    --accentBlue: #54D0F2;
+    --accentRed: #B21F24;
 }
 html {
     background-color: var(--backgroundColor);
