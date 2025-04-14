@@ -26,15 +26,16 @@ body {
     display: flex;
     flex-direction: column;
 }
-
 h1 {
-font-size: 36px;
-font-weight: 400;
+    font-size: 36px;
+    font-weight: 400;
 }
-
 h2 {
-font-size: 24px;
-font-weight: 400;
+    font-size: 24px;
+    font-weight: 400;
 }
 
 /* Styles for header and footer */
+header {
+    background-color: url(--backgroundColor)
+}
