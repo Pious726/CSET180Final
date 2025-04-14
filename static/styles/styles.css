@@ -35,6 +35,9 @@ body {
     width: 100%;
     margin: 0 auto;
 }
+.flex {
+    display: flex;
+}
 h1 {
     font-size: 36px;
     text-align: center;
