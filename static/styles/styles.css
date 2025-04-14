@@ -22,6 +22,9 @@ html {
     font-style: normal;
     font-size: 20px;
 }
+img {
+    max-width: 100%;
+}
 body {
     height: 100%;
     display: flex;
@@ -70,4 +73,12 @@ header {
 footer {
     background-color: var(--secondaryColor);
     font-size: 14px;
+    padding: 15px 0;
+}
+.f-navlist {
+    margin-bottom: 5px;
+}
+.copyright {
+    font-size: 10px;
+    text-align: center;
 }
