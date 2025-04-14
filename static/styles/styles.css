@@ -22,6 +22,9 @@ html {
     font-style: normal;
     font-size: 20px;
 }
+img {
+    max-width: 100%;
+}
 body {
     height: 100%;
     display: flex;
@@ -31,6 +34,9 @@ body {
     max-width: 1400px;
     width: 100%;
     margin: 0 auto;
+}
+.flex {
+    display: flex;
 }
 h1 {
     font-size: 36px;
@@ -74,6 +80,7 @@ header {
 footer {
     background-color: var(--secondaryColor);
     font-size: 14px;
+    padding: 15px 0;
 }
 
 img {
@@ -90,3 +97,10 @@ img {
     z-index: 1;
 }
 
+.f-navlist {
+    margin-bottom: 5px;
+}
+.copyright {
+    font-size: 10px;
+    text-align: center;
+}
