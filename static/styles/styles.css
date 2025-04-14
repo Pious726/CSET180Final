@@ -23,3 +23,7 @@ body {
     display: flex;
     flex-direction: column;
 }
+
+header {
+    background-color: url(--backgroundColor)
+}
