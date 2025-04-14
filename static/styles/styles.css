@@ -9,6 +9,7 @@
 :root {
     --backgroundColor: #313131;
     --secondaryColor: #171615;
+    --textColor: #fff;
     --accentGreen: #87D671;
     --accentBlue: #54D0F2;
     --accentRed: #B21F24;
@@ -26,16 +27,47 @@ body {
     display: flex;
     flex-direction: column;
 }
+.container {
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+}
 h1 {
     font-size: 36px;
-    font-weight: 400;
+    text-align: center;
 }
 h2 {
     font-size: 24px;
-    font-weight: 400;
+}
+p {
+    font-size: 20px;
+}
+a {
+    color: var(--accentGreen);
 }
 
-/* Styles for header and footer */
+/* Styles for header*/
 header {
-    background-color: url(--backgroundColor)
+    background-color: var(--secondaryColor);
+}
+
+/* Styles for nav */
+.navlist {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 20px 0;
+}
+.navlist li {
+    list-style-type: none;
+    font-size: 18px;
+}
+.navlist a {
+    text-decoration: none;
+    color: var(--textColor);
+}
+
+/* Styles for footer */
+footer {
+    background-color: var(--secondaryColor);
+    font-size: 14px;
 }
