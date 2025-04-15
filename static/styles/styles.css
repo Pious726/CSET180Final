@@ -14,7 +14,6 @@
     --accentBlue: #54D0F2;
     --accentRed: #B21F24;
 }
-
 @font-face {
     font-family: 'MinecraftSeven'; /* This is the name you will use */
     src: url('../Fonts/Minecraft-Seven_v2.ttf') format('truetype'); /* Path to your font */
