@@ -104,3 +104,86 @@ img {
     font-size: 10px;
     text-align: center;
 }
+
+.form-container {
+    margin: 0 auto;
+    align-items: center;
+    background-color: rgba(49, 49, 49, 0.85); /* 0.5 = 50% opacity */
+    padding: 30px 100px 50px 100px;  
+    
+}
+
+
+.register_input {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 10px 80px 10px 5px;
+    border: 2px solid var(--accentGreen);
+    background-image: url('../Images/pack_3530346.jpg');
+    background-size: cover;
+    background-color: rgba(0, 0, 0, 0.1); /* dark veil */
+    background-blend-mode: overlay;
+    color:#fff;
+    font-family: 'MinecraftSeven', sans-serif;
+    font-size: .8em;
+}
+
+.loginLogo {
+    max-width: 25%;
+    margin: 0 auto;
+}
+
+.login {
+    display: block;
+    font-size: .8em;
+    margin-top: 5px;
+}
+
+.login:hover {
+    color: #c9efbf;
+}
+
+input::placeholder {
+    color: #fff;
+    
+}
+
+
+
+.input_submit {
+    background-color: var(--secondaryColor);
+    padding: 10px 25px;
+    color: #fff;
+    text-align: center;
+    font-size: .8em;
+    font-family: 'MinecraftSeven', sans-serif;
+}
+
+.input_submit:hover {
+    background-color: #313131;
+}
+
+#register {
+    background-image: url('../Images/realbg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    
+}
+
+@font-face {
+    font-family: 'MinecraftSeven'; /* This is the name you will use */
+    src: url('../fonts/Minecraft-Seven_v2.ttf') format('truetype'); /* Path to your font */
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+.register h1 {
+    font-family: 'MinecraftSeven', sans-serif;
+    margin-bottom: 15px;
+}
+
+.register a {
+    font-family: 'MinecraftSeven', sans-serif;
+}
