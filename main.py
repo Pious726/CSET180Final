@@ -9,7 +9,7 @@ conn = engine.connect()
 
 @app.route('/')
 def loadapp():
-    return render_template('index.html')
+    return render_template('home.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
