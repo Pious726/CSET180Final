@@ -63,14 +63,16 @@ a {
 }
 
 /* Styles for registration */
+
 .register_input {
     margin-top: 10px;
     margin-bottom: 10px;
     padding: 10px 80px 10px 5px;
-    border: 2px solid var(--accentGreen);
+    border: 4px solid transparent;
+    border-image: url('../Images/grass.jpg') 30 round;
     background-image: url('../Images/pack_3530346.jpg');
     background-size: cover;
-    background-color: rgba(0, 0, 0, 0.1); /* dark veil */
+    background-color: rgba(0, 0, 0, 0.1 ); /* dark veil */
     background-blend-mode: overlay;
     color:#fff;
     font-family: 'MinecraftSeven', sans-serif;
@@ -101,6 +103,8 @@ input::placeholder {
 }
 .input_submit {
     background-color: var(--secondaryColor);
+    background-image: url('../Images/grass.jpg');
+    background-size: cover;
     padding: 10px 25px;
     color: #fff;
     text-align: center;
@@ -151,7 +155,6 @@ nav {
 .navlist li {
     list-style-type: none;
     font-size: 18px;
-    font-weight: 600;
     font-family: 'MinecraftSeven', sans-serif;
 }
 .navlist a {
