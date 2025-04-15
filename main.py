@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, url_for, redirect
 from sqlalchemy import create_engine, text
-import random
 import bcrypt
  
 app = Flask(__name__)
@@ -10,7 +9,7 @@ conn = engine.connect()
 
 @app.route('/')
 def loadapp():
-    return render_template('index.html')
+    return render_template('home.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

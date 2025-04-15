@@ -37,6 +37,9 @@ body {
 }
 .flex {
     display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 h1 {
     font-size: 36px;
@@ -46,7 +49,7 @@ h2 {
     font-size: 24px;
 }
 p {
-    font-size: 20px;
+    font-size: 16px;
 }
 a {
     color: var(--accentGreen);
@@ -55,36 +58,6 @@ a {
 /* Styles for header*/
 header {
     background-color: var(--secondaryColor);
-}
-
-/* Styles for nav */
-.navlist {
-    display: flex;
-    justify-content: space-evenly;
-    margin: 20px 0;
-}
-.navlist li {
-    list-style-type: none;
-    font-size: 18px;
-}
-.navlist a {
-    text-decoration: none;
-    color: var(--textColor);
-}
-
-.navlist a:hover {
-    color: var(--accentGreen);
-}
-
-/* Styles for footer */
-footer {
-    background-color: var(--secondaryColor);
-    font-size: 14px;
-    padding: 15px 0;
-}
-
-img {
-    max-width: 100%;
 }
 .header-image {
     background-image: url('../Images/minecraft-movie-theatrical-trailer-banner.jpg');
@@ -97,11 +70,108 @@ img {
     z-index: 1;
 }
 
-.f-navlist {
-    margin-bottom: 5px;
+/* Styles for nav */
+nav {
+    padding: 20px 0;
 }
-.copyright {
-    font-size: 10px;
+.navlist {
+    display: flex;
+    justify-content: space-evenly;
+}
+.navlist li {
+    list-style-type: none;
+    font-size: 18px;
+    font-weight: 600;
+}
+.navlist a {
+    text-decoration: none;
+    color: var(--textColor);
+}
+
+.navlist a:hover {
+    color: var(--accentGreen);
+}
+
+/* Styles for main */
+main, section {
+    padding: 20px 0;
+}
+#advertisement-1 {
+    background-image: url(../images/Untitled\ design.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 100%;
+    height: 100vh;
+}
+#advertisement-2 {
+    background-image: url(../images/minecraft-movie-banner.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    z-index: 1;
+}
+.ad-text-box {
+    width: 1140px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+}
+
+
+
+
+
+
+
+
+
+
+/* Styles for footer */
+footer {
+    background-color: var(--secondaryColor);
+    font-size: 14px;
+}
+footer h2 {
+    font-size: 16px;
+}
+.socials {
+    padding: 20px 0;
+}
+.social-icons ion-icon {
+    color: var(--textColor);
+    font-size: 40px;
+    margin: 0 10px;
+}
+.social-icons ion-icon:hover {
+    color: var(--accentGreen)
+}
+.footer-links {
+    padding: 20px 0;
+}
+.newsletter input {
+    padding: 5px;
+    margin-top: 3px;
+    border: 1px solid var(--accentGreen);
+    background-color: var(--secondaryColor);
+    color: var(--textColor);
+}
+input.news-btn {
+    background-color: var(--accentGreen);
+    color: var(--secondaryColor);
+    cursor: pointer;
+}
+.footer-links.flex {
+    justify-content: space-evenly;
+    align-items: start;
+}
+.socials {
+    background-color: #000000;
     text-align: center;
 }
 
@@ -186,4 +256,15 @@ input::placeholder {
 
 .register a {
     font-family: 'MinecraftSeven', sans-serif;
+}
+.f-navlist {
+    margin-bottom: 5px;
+    list-style-type: none;
+}
+.copyright {
+    padding-bottom: 20px;
+    text-align: center;
+}
+.copyright p {
+    font-size: 10px;
 }
