@@ -237,27 +237,28 @@ footer p {
     padding: 20px 0;
 }
 input.news-email {
-    padding: 5px;
-    margin-top: 3px;
-    border: 1px solid var(--accentGreen);
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 10px 80px 10px 5px;
+    border: 4px solid transparent;
+    border-image: url('../Images/grass.jpg') 30 round;
     background-image: url('../Images/pack_3530346.jpg');
     background-size: cover;
-    background-color: rgba(0, 0, 0, 0.1); /* dark veil */
+    background-color: rgba(0, 0, 0, 0.1 ); /* dark veil */
     background-blend-mode: overlay;
-    color: var(--textColor);
+    color:#fff;
     font-family: 'MinecraftSeven', sans-serif;
+    font-size: .8em;
 }
 input.news-btn {
-    padding: 5px;
-    margin-top: 3px;
-    border: 1px solid var(--accentGreen);
-    background-image: url('../Images/pack_3530346.jpg');
+    background-color: var(--secondaryColor);
+    background-image: url('../Images/grass.jpg');
     background-size: cover;
-    background-color: rgba(0, 0, 0, 0.1); /* dark veil */
-    background-blend-mode: overlay;
-    color: var(--textColor);
+    padding: 14px 25px;
+    color: #fff;
+    text-align: center;
+    font-size: .8em;
     font-family: 'MinecraftSeven', sans-serif;
-    color: var(--secondaryColor);
     cursor: pointer;
 }
 .footer-links.flex {
