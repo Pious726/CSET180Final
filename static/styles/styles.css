@@ -16,7 +16,7 @@
 }
 @font-face {
     font-family: 'MinecraftSeven'; /* This is the name you will use */
-    src: url('../fonts/Minecraft-Seven_v2.ttf') format('truetype'); /* Path to your font */
+    src: url('../Fonts/Minecraft-Seven_v2.ttf') format('truetype'); /* Path to your font */
     font-weight: normal;
     font-style: normal;
 }
