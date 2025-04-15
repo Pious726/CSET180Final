@@ -20,6 +20,12 @@
     font-weight: normal;
     font-style: normal;
 }
+@font-face {
+    font-family: 'MinecraftTen';
+    src: url('../Fonts/MinecraftTen-VGORe.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
 html {
     background-color: var(--backgroundColor);
     color: var(--textColor);
