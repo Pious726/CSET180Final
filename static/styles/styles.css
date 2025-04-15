@@ -17,13 +17,11 @@
 @font-face {
     font-family: 'MinecraftSeven'; /* This is the name you will use */
     src: url('../Fonts/Minecraft-Seven_v2.ttf') format('truetype'); /* Path to your font */
-    font-weight: normal;
     font-style: normal;
 }
 @font-face {
     font-family: 'MinecraftTen';
     src: url('../Fonts/MinecraftTen-VGORe.ttf');
-    font-weight: normal;
     font-style: normal;
 }
 html {
@@ -54,14 +52,18 @@ body {
     align-items: center;
 }
 h1 {
-    font-size: 36px;
+    font-family: 'MinecraftTen', sans-serif;
+    font-size: 40px;
+    letter-spacing: 2px;
     text-align: center;
 }
 h2 {
+    font-family: 'MinecraftTen', sans-serif;
     font-size: 24px;
 }
 p {
-    font-size: 16px;
+    font-family: 'MinecraftSeven';
+    font-size: 1.3em;
 }
 a {
     color: var(--accentGreen);
@@ -95,7 +97,6 @@ a {
 }
 input::placeholder {
     color: #fff;
-    
 }
 .form-container {
     margin: 0 auto;
@@ -120,7 +121,6 @@ input::placeholder {
     background-repeat: no-repeat;
     background-size: cover;
     height: 100vh;
-    
 }
 .register h1 {
     font-family: 'MinecraftSeven', sans-serif;
@@ -156,7 +156,6 @@ nav {
 .navlist li {
     list-style-type: none;
     font-size: 18px;
-    font-weight: 600;
     font-family: 'MinecraftSeven', sans-serif;
 }
 .navlist a {
@@ -191,12 +190,19 @@ main, section {
     z-index: 1;
 }
 .ad-text-box {
-    width: 1140px;
+    background-color: var(--secondaryColor);
+    color: #fff;
+    padding: 20px;
+    width: 25%;
     position: absolute;
     top: 50%;
-    left: 50%;
+    left: 20%;
     transform: translate(-50%, -50%);
-    color: #fff;
+}
+.ad-text-box h2 {
+    font-size: 30px;
+    font-weight: 200;
+    margin-bottom: 15px;
 }
 
 /* Styles for footer */
@@ -205,6 +211,11 @@ footer {
     font-size: 14px;
 }
 footer h2 {
+    font-size: 16px;
+    font-weight: 100;
+    margin: 5px 0;
+}
+footer p {
     font-size: 16px;
 }
 .socials {
@@ -221,15 +232,27 @@ footer h2 {
 .footer-links {
     padding: 20px 0;
 }
-.newsletter input {
+input.news-email {
     padding: 5px;
     margin-top: 3px;
     border: 1px solid var(--accentGreen);
-    background-color: var(--secondaryColor);
+    background-image: url('../Images/pack_3530346.jpg');
+    background-size: cover;
+    background-color: rgba(0, 0, 0, 0.1); /* dark veil */
+    background-blend-mode: overlay;
     color: var(--textColor);
+    font-family: 'MinecraftSeven', sans-serif;
 }
 input.news-btn {
-    background-color: var(--accentGreen);
+    padding: 5px;
+    margin-top: 3px;
+    border: 1px solid var(--accentGreen);
+    background-image: url('../Images/pack_3530346.jpg');
+    background-size: cover;
+    background-color: rgba(0, 0, 0, 0.1); /* dark veil */
+    background-blend-mode: overlay;
+    color: var(--textColor);
+    font-family: 'MinecraftSeven', sans-serif;
     color: var(--secondaryColor);
     cursor: pointer;
 }
