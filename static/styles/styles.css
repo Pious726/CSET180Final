@@ -122,7 +122,7 @@ footer h2 {
 .newsletter input {
     padding: 5px;
     margin-top: 3px;
-    border: 2px solid var(--accentGreen);
+    border: 1px solid var(--accentGreen);
     background-color: var(--secondaryColor);
     color: var(--textColor);
 }
