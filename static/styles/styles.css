@@ -202,8 +202,8 @@ section {
     z-index: 1;
 }
 #advertisement-1 {
-    background-image: url(../images/AMM\ Hero\ Visual\ Bee\ -\ 1170x500.jpg.avif);
-    aspect-ratio: 1170/500;
+    background-image: url(../images/MinecraftPlushAd.png);
+    aspect-ratio: 1400/500;
 }
 #advertisement-2 {
     background-image: url(../images/minecraft-movie-banner.png);
@@ -211,18 +211,31 @@ section {
 }
 .ad-text-box {
     background-color: var(--secondaryColor);
+    border-top: 4px solid var(--backgroundColor);
+    border-bottom: 4px solid #272624;
+    border-left: 4px solid var(--backgroundColor);
+    border-right: 4px solid #272624;
     color: #fff;
     padding: 20px;
-    width: 25%;
+    width: 32%;
     position: absolute;
     top: 50%;
     left: 20%;
     transform: translate(-50%, -50%);
 }
 .ad-text-box h2 {
-    font-size: 30px;
+    font-size: 40px;
     font-weight: 200;
     margin-bottom: 15px;
+}
+.ad-text-box p {
+    margin-bottom: 15px;
+}
+.ad-btn {
+    background-color: var(--accentGreen);
+    color: #fff;
+    padding: 10px;
+    cursor: pointer;
 }
 section.flex {
     justify-content: space-evenly;
