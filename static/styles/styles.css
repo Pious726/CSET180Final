@@ -91,6 +91,20 @@ a {
     max-width: 25%;
     margin: 0 auto;
 }
+
+.baselogo {
+    width: 40%;
+    min-width: 250px;
+    margin: 0 auto;
+    display: block;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.top {
+    width: 100%;
+    background-color: #171615;
+}
 .login {
     display: block;
     font-size: .8em;
