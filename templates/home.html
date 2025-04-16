@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block body %}
     <main>
-        <h1>Welcome to the Minecrƒft store!</h1>
+        <h1 class="page-title">Welcome to the Minecrƒft store!</h1>
         <section id="5grid-1" class="flex">
             <div class="product-card">
 
@@ -13,7 +13,7 @@
                 
             </div>
             <div class="product-card">
-                
+
             </div>
             <div class="product-card">
                 
@@ -21,7 +21,11 @@
         </section>
 
         <section id="advertisement-1">
-
+            <div class="ad-text-box">
+                <h2>Shop Plushies here!</h2>
+                <p>A plush for everyone!</p>
+                <a href="shop.html"><button class="ad-btn">Shop Here!</button></a>
+            </div>
         </section>
 
         <section id="5grid-2" class="flex">
@@ -48,7 +52,6 @@
                 <p>MERCH OUT NOW!</p>
                 <a href="shop.html"><button class="ad-btn">Shop Here!</button></a>
             </div>
-            
         </section>
     </main>
 {% endblock %}

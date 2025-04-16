@@ -14,7 +14,6 @@ def loadapp():
 @app.route('/register', methods=["POST"])
 def signup():
     try:
-        
         conn.execute(text('''
             INSERT INTO Users (name, email_address, username, password, account_type) 
             VALUES (:Name, :Email, :Username, :Password, :account_type)
@@ -25,12 +24,17 @@ def signup():
     except:
         return render_template('index.html', error="Failed", success=None)
 
-
-
 @app.route('/login.html')
 def login():
     return render_template('login.html')
 
+@app.route('/home.html')
+def loadhome():
+    return render_template('home.html')
+
+@app.route('/shop.html', methods=['GET'])
+def loadshop():
+    return render_template('shop.html')
 
 
 if __name__ == '__main__':

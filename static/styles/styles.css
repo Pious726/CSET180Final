@@ -42,6 +42,14 @@ body {
     display: flex;
     flex-direction: column;
 }
+<<<<<<< HEAD
+=======
+body#register {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+>>>>>>> da56e69479fa22510755df59e4e1bba7278ca37b
 .container {
     max-width: 1400px;
     width: 100%;
@@ -91,7 +99,6 @@ a {
     max-width: 25%;
     margin: 0 auto;
 }
-
 .baselogo {
     width: 40%;
     min-width: 200px;
@@ -100,7 +107,6 @@ a {
     margin-top: 50px;
     margin-bottom: 50px;
 }
-
 .top {
     width: 100%;
     background-color: #171615;
@@ -121,9 +127,7 @@ input::placeholder {
     align-items: center;
     background-color: rgba(49, 49, 49, 0.85); /* 0.5 = 50% opacity */
     padding: 30px 100px 50px 100px;  
-    
 }
-
 .input_submit {
     background-color: var(--secondaryColor);
     background-image: url('../Images/grass.jpg');
@@ -142,6 +146,10 @@ input::placeholder {
     background-repeat: no-repeat;
     background-size: cover;
     height: 100vh;
+<<<<<<< HEAD
+=======
+    background-attachment: fixed;
+>>>>>>> da56e69479fa22510755df59e4e1bba7278ca37b
 }
 .register h1 {
     font-family: 'MinecraftSeven', sans-serif;
@@ -175,8 +183,10 @@ nav {
     justify-content: space-evenly;
 }
 .navlist li {
+    width: 20%;
+    text-align: center;
     list-style-type: none;
-    font-size: 18px;
+    font-size: 20px;
     font-family: 'MinecraftSeven', sans-serif;
 }
 .navlist a {
@@ -189,42 +199,70 @@ nav {
 }
 
 /* Styles for main */
-main, section {
-    padding: 20px 0;
+.page-title {
+    margin-top: 10px;
+    margin-bottom: 20px;
 }
-#advertisement-1 {
-    background-image: url(../images/Untitled\ design.png);
+section {
+    margin: 50px 0;
+}
+#advertisement-1, #advertisement-2 {
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
     width: 100%;
-    height: 100vh;
-}
-#advertisement-2 {
-    background-image: url(../images/minecraft-movie-banner.png);
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
-    width: 100%;
-    height: 100vh;
     position: relative;
     z-index: 1;
 }
+#advertisement-1 {
+    background-image: url(../images/MinecraftPlushAd.png);
+    aspect-ratio: 1400/500;
+}
+#advertisement-2 {
+    background-image: url(../images/minecraft-movie-banner.png);
+    aspect-ratio: 2048/759;
+}
 .ad-text-box {
     background-color: var(--secondaryColor);
+    border-top: 4px solid var(--backgroundColor);
+    border-bottom: 4px solid #272624;
+    border-left: 4px solid var(--backgroundColor);
+    border-right: 4px solid #272624;
     color: #fff;
     padding: 20px;
-    width: 25%;
+    width: 32%;
     position: absolute;
     top: 50%;
     left: 20%;
     transform: translate(-50%, -50%);
 }
 .ad-text-box h2 {
-    font-size: 30px;
+    font-size: 40px;
     font-weight: 200;
     margin-bottom: 15px;
 }
+<<<<<<< HEAD
+=======
+.ad-text-box p {
+    margin-bottom: 15px;
+}
+.ad-btn {
+    background-color: var(--accentGreen);
+    color: #fff;
+    padding: 10px;
+    cursor: pointer;
+}
+section.flex {
+    justify-content: space-evenly;
+}
+.product-card {
+    display: block;
+    background-color: #fff;
+    width: 18%;
+    height: 100%;
+    min-height: 200px;
+}
+>>>>>>> da56e69479fa22510755df59e4e1bba7278ca37b
 
 /* Styles for footer */
 footer {
