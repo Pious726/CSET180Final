@@ -14,7 +14,7 @@ def loadapp():
 @app.route('/register', methods=["POST"])
 def signup():
     try:
-        # Corrected SQL query with column names matching the database
+        
         conn.execute(text('''
             INSERT INTO Users (name, email_address, username, password, account_type) 
             VALUES (:Name, :Email, :Username, :Password, :account_type)
