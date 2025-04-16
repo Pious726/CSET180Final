@@ -101,10 +101,11 @@ input::placeholder {
     padding: 30px 100px 50px 100px;  
     
 }
+
 .input_submit {
     background-color: var(--secondaryColor);
     background-image: url('../Images/grass.jpg');
-    background-size: cover;
+    background-size: 175px 175px;
     padding: 10px 25px;
     color: #fff;
     text-align: center;
