@@ -42,6 +42,13 @@ body {
     display: flex;
     flex-direction: column;
 }
+
+body#register {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
 .container {
     max-width: 1400px;
     width: 100%;
@@ -136,11 +143,14 @@ input::placeholder {
 .input_submit:hover {
     background-color: #313131;
 }
+
 #register {
     background-image: url('../Images/realbg.png');
     background-repeat: no-repeat;
     background-size: cover;
     height: 100vh;
+    background-attachment: fixed;
+    overflow: hidden;
 }
 .register h1 {
     font-family: 'MinecraftSeven', sans-serif;
