@@ -15,5 +15,14 @@ def loadapp():
 def login():
     return render_template('login.html')
 
+@app.route('/home.html')
+def loadhome():
+    return render_template('home.html')
+
+@app.route('/shop.html')
+def loadshop():
+    return render_template('shop.html')
+
+
 if __name__ == '__main__':
     app.run(debug=True)

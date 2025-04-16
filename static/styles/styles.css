@@ -190,6 +190,10 @@ nav {
 }
 
 /* Styles for main */
+.page-title {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
 section {
     margin: 50px 0;
 }
