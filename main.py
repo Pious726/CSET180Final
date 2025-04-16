@@ -9,7 +9,21 @@ conn = engine.connect()
 
 @app.route('/')
 def loadapp():
-    return render_template('home.html')
+    return render_template('index.html')
+
+@app.route('/register', methods=["POST"])
+def signup():
+    try:
+        # Corrected SQL query with column names matching the database
+        conn.execute(text('''
+            INSERT INTO Users (name, email_address, username, password, account_type) 
+            VALUES (:Name, :Email, :Username, :Password, :account_type)
+        '''), request.form)
+
+        conn.commit()
+        return render_template('login.html', success="Successful", error=None)
+    except:
+        return render_template('index.html', error="Failed", success=None)
 
 @app.route('/login.html')
 def login():
