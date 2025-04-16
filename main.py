@@ -19,7 +19,7 @@ def login():
 def loadhome():
     return render_template('home.html')
 
-@app.route('/shop.html')
+@app.route('/shop.html', methods=['GET'])
 def loadshop():
     return render_template('shop.html')
 
