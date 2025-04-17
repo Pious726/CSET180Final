@@ -34,7 +34,8 @@ def loadhome():
 
 @app.route('/shop.html', methods=['GET'])
 def loadshop():
-    return render_template('shop.html')
+    products = conn.execute(text('select * from products natural join Product_Images')).fetchall()
+    return render_template('shop.html', products=products)
 
 
 if __name__ == '__main__':

@@ -233,16 +233,27 @@ section {
 }
 .ad-btn {
     background-color: var(--accentGreen);
+    border-top: 4px solid #83c471;
+    border-bottom: 4px solid #5f9e4e;
+    border-left: 4px solid #83c471;
+    border-right: 4px solid #5f9e4e;
     color: #fff;
     padding: 10px;
     cursor: pointer;
 }
-section.flex {
+.ad-btn:hover {
+    background-color: #2f8317;
+    border-top: 4px solid #5f9e4e;
+    border-bottom: 4px solid #83c471;
+    border-left: 4px solid #5f9e4e;
+    border-right: 4px solid #83c471;
+}
+#grid5-1 .flex, #grid5-2 .flex {
     justify-content: space-evenly;
 }
 .product-card {
     display: block;
-    background-color: #fff;
+    text-align: center;
     width: 18%;
     height: 100%;
     min-height: 200px;

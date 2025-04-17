@@ -2,8 +2,20 @@
 {% block body %}
     <main>
         <h1 class="page-title">Products for everyone!</h1>
-        <section>
-            
-        </section>
+        <div class="product-container">
+           <div class="filters">
+
+            </div>
+            <div class="product-list flex">
+                {% for product in products %}
+                    <div class="product-card">
+                        <img src={{product[8]}} alt={{product[2]}}>
+                        <p>{{product[2]}}</p>
+                        <p>{{product[7]}}</p>
+                        <button class="ad-btn">View Item!</button>
+                    </div>
+                {% endfor %}
+            </div> 
+        </div>
     </main>
 {% endblock %}
