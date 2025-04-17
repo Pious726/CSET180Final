@@ -272,6 +272,9 @@ section {
     gap: 30px;
     flex: 1;
 }
+.product-list.flex {
+    align-items: start;
+}
 .product-card {
     color: #fff;
     padding: 15px;

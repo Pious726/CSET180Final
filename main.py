@@ -47,9 +47,10 @@ def login():
 
 @app.route('/logout')
 def logout():
-    conn.execute(text('Update uesers Set IsLoggedIn = 0 Where IsLoggedIn = 1'))
+    conn.execute(text('Update users Set IsLoggedIn = 0 Where IsLoggedIn = 1'))
     conn.commit()
     return redirect(url_for('login'))
+
 @app.route('/home.html')
 def loadhome():
     return render_template('home.html')
@@ -59,6 +60,16 @@ def loadshop():
     products = conn.execute(text('select * from products natural join Product_Images')).fetchall()
     return render_template('shop.html', products=products)
 
+@app.route('/accounts.html', methods=['GET'])
+def getaccount():
+    account = conn.execute(text('select * from users where IsLoggedIn = 1')).fetchall()
+    return render_template('accounts.html', account=account)
+
+@app.route('/orders.html', methods=['GET'])
+def getaccount():
+    customerID = conn.execute(text('select customerID from customers natural join users where IsLoggedIn = 1')).scalar()
+    orders = conn.execute(text(f'select * from orders where customerID = {customerID}')).fetchall()
+    return render_template('orders.html', orders=orders)
 
 if __name__ == '__main__':
     app.run(debug=True)
