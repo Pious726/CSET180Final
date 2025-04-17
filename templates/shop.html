@@ -3,8 +3,33 @@
     <main>
         <h1 class="page-title">Products for everyone!</h1>
         <div class="product-container">
-           <div class="filters">
+            <div class="filters">
+                <h2>Filters</h2>
 
+                <h3>Category</h3>
+                <form>
+                    <label><input type="checkbox"> Clothing</label><br>
+                    <label><input type="checkbox"> Toys</label><br>
+                    <label><input type="checkbox"> Plushes</label><br>
+                    <label><input type="checkbox"> Video Games</label><br>
+                </form>
+
+                <h3>Color</h3>
+                <form>
+                </form>
+
+                <h3>Size</h3>
+                <form>
+                    <label><input type="checkbox"> Small</label><br>
+                    <label><input type="checkbox"> Medium</label><br>
+                    <label><input type="checkbox"> Large</label><br>
+                </form>
+
+                <h3>Availability</h3>
+                <form>
+                    <label><input type="checkbox"> In Stock</label><br>
+                    <label><input type="checkbox"> Out of Stock</label><br>
+                </form>
             </div>
             <div class="product-list flex">
                 {% for product in products %}
