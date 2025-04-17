@@ -23,11 +23,33 @@ def signup():
         return render_template('login.html', success="Successful", error=None)
     except:
         return render_template('index.html', error="Failed", success=None)
+    
 
-@app.route('/login.html')
+@app.route('/login.html', methods=['GET', 'POST'])
 def login():
-    return render_template('login.html')
+    if request.method == 'POST':
+        email = request.form.get("Email")
+        password = request.form.get("Password")
 
+        stored_password = conn.execute(text('Select Password From users Where email_address = :email'), {'email': email}).scalar()
+
+        if stored_password:
+            if password == stored_password:
+                conn.execute(text("Update users Set IsLoggedIN = 1 Where email_address = :email"), {"email": email})
+                conn.commit()
+                return redirect(url_for('loadhome'))  
+            else:
+                return render_template('login.html', error='Incorrect email or password.', success=None)
+        else:
+            return render_template('login.html', error='Account not found.', success=None)
+
+    return render_template('login.html') 
+
+@app.route('/logout')
+def logout():
+    conn.execute(text('Update uesers Set IsLoggedIn = 0 Where IsLoggedIn = 1'))
+    conn.commit()
+    return redirect(url_for('login'))
 @app.route('/home.html')
 def loadhome():
     return render_template('home.html')
