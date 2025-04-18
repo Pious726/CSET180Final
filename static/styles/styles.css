@@ -123,7 +123,8 @@ input::placeholder {
     margin: 0 auto;
     align-items: center;
     background-color: rgba(49, 49, 49, 0.85); /* 0.5 = 50% opacity */
-    padding: 30px 100px 50px 100px;  
+    padding: 30px 100px 30px 100px;
+    margin-bottom: 30px;  
 }
 .input_submit {
     background-color: var(--secondaryColor);
