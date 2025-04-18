@@ -89,7 +89,7 @@ def getaccount():
 
 @app.route('/orders.html', methods=['GET'])
 def getorders():
-    customerID = conn.execute(text('select customerID from customers natural join users where IsLoggedIn = 1')).scalar()
+    customerID = conn.execute(text('select customerID from customer natural join users where IsLoggedIn = 1')).scalar()
     orders = conn.execute(text(f'select * from orders where customerID = {customerID}')).fetchall()
     return render_template('orders.html', orders=orders)
 

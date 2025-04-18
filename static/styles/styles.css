@@ -88,7 +88,7 @@ a {
     background-size: cover;
     background-color: rgba(0, 0, 0, 0.1 ); /* dark veil */
     background-blend-mode: overlay;
-    color:#fff;
+    color: var(--textColor);
     font-family: 'MinecraftSeven', sans-serif;
     font-size: .8em;
 }
@@ -117,7 +117,7 @@ a {
     color: #c9efbf;
 }
 input::placeholder {
-    color: #fff;
+    color: var(--textColor);
 }
 .form-container {
     margin: 0 auto;
@@ -130,7 +130,7 @@ input::placeholder {
     background-image: url('../Images/grass.jpg');
     background-size: 175px 175px;
     padding: 10px 25px;
-    color: #fff;
+    color: var(--textColor);
     text-align: center;
     font-size: .8em;
     font-family: 'MinecraftSeven', sans-serif;
@@ -186,7 +186,6 @@ nav {
     text-decoration: none;
     color: var(--textColor);
 }
-
 .navlist a:hover {
     color: var(--accentGreen);
 }
@@ -221,7 +220,7 @@ section {
     border-bottom: 4px solid #272624;
     border-left: 4px solid var(--backgroundColor);
     border-right: 4px solid #272624;
-    color: #fff;
+    color: var(--textColor);
     padding: 20px;
     width: 32%;
     position: absolute;
@@ -243,7 +242,7 @@ section {
     border-bottom: 4px solid #5f9e4e;
     border-left: 4px solid #83c471;
     border-right: 4px solid #5f9e4e;
-    color: #fff;
+    color: var(--textColor);
     padding: 10px;
     cursor: pointer;
 }
@@ -289,7 +288,7 @@ section {
     align-items: start;
 }
 .product-card {
-    color: #fff;
+    color: var(--textColor);
     text-align: center;
 }
 .product-card img {
@@ -305,12 +304,40 @@ section {
 
 /* Styles for accounts page */
 .account-info {
-    background-color: #000000;
+    background-color: var(--secondaryColor);
+    border-top: 10px solid #3f3f3f;
+    border-bottom: 10px solid #272624;
+    border-left: 10px solid #3f3f3f;
+    border-right: 10px solid #272624;
     text-align: center;
+    width: 50%;
     padding: 30px 0;
     margin: 20px auto;
 }
 .account-info p {
+    margin: 10px 0;
+}
+
+/* Styles for order page */
+.order-info {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    gap: 30px;
+}
+.order-card {
+    background-color: var(--secondaryColor);
+    border-top: 10px solid #3f3f3f;
+    border-bottom: 10px solid #272624;
+    border-left: 10px solid #3f3f3f;
+    border-right: 10px solid #272624;
+    text-align: center;
+    padding: 30px;
+    margin: 20px;
+}
+.order-card p {
     margin: 10px 0;
 }
 
@@ -351,7 +378,7 @@ input.news-email {
     background-size: cover;
     background-color: rgba(0, 0, 0, 0.1 ); /* dark veil */
     background-blend-mode: overlay;
-    color:#fff;
+    color: var(--textColor);
     font-family: 'MinecraftSeven', sans-serif;
     font-size: .8em;
 }
@@ -360,7 +387,7 @@ input.news-btn {
     background-image: url('../Images/grass.jpg');
     background-size: cover;
     padding: 14px 25px;
-    color: #fff;
+    color: var(--textColor);
     text-align: center;
     font-size: .8em;
     font-family: 'MinecraftSeven', sans-serif;
@@ -377,6 +404,9 @@ input.news-btn {
 .f-navlist {
     margin-bottom: 5px;
     list-style-type: none;
+}
+.f-navlist a:hover {
+    color: #5f9e4e;
 }
 .copyright {
     padding-bottom: 20px;

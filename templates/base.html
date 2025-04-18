@@ -12,7 +12,7 @@
 </head>
 <body>
 <div class="top">
-        <img class="baselogo" src="../static/Images/minecraftlogo.svg" alt="logo">
+        <a href="home.html"><img class="baselogo" src="../static/Images/minecraftlogo.svg" alt="logo"></a>
 </div>
     <header>
         <nav class="navbar">
@@ -22,10 +22,10 @@
                 <li><a href="accounts.html">MY ACCOUNT</a></li>
                 <li><a href="orders.html">MY ORDERS</a></li>
                 <li><a href="cart.html">CART</a></li>
-                <li><a href="{{ url_for('logout')}}">LOG OUT</a></li>
                 {% if session.get('account_type') == 'vendor' %}
                 <li><a href="{{ url_for('vendor_products') }}">MY PRODUCTS</a></li>
                 {% endif %}
+                <li><a href="{{ url_for('logout')}}">LOG OUT</a></li>
             </ul>
         </nav>
         <div class="header-image"></div>
