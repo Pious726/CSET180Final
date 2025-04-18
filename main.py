@@ -27,7 +27,6 @@ def signup():
     except:
         return render_template('index.html', error="Failed", success=None)
     
-
 @app.route('/login.html', methods=["GET"])
 def getlogins():
     conn.execute(text('update users set IsLoggedIn = 0 where IsLoggedIn = 1'))
