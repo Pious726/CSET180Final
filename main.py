@@ -92,6 +92,10 @@ def getorders():
     orders = conn.execute(text(f'select * from orders where customerID = {customerID}')).fetchall()
     return render_template('orders.html', orders=orders)
 
+@app.route('/cart.html')
+def getcartitems():
+    return render_template('cart.html')
+
 @app.route('/vendor_products')
 def vendor_products():
     vendor_id = session.get('user_id')  # Get the vendor's user ID from the session
