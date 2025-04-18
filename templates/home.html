@@ -3,23 +3,16 @@
     <main>
         <h1 class="page-title">Welcome to the Minecrƒft store!</h1>
         <section id="grid5-1">
-            <div class="flex">            
-                <div class="product-card">
-
-                </div>
-                <div class="product-card">
-                    
-                </div>
-                <div class="product-card">
-                    
-                </div>
-                <div class="product-card">
-
-                </div>
-                <div class="product-card">
-                    
-                </div>
-            </div>
+            <div class="product-list flex">
+                {% for product in products[:3] %}
+                    <div class="product-card">
+                        <img src="../static/images/grass.jpg" alt={{product[2]}}>
+                        <p>{{product[2]}}</p>
+                        <p>{{product[7]}}</p>
+                        <button class="ad-btn">View Item!</button>
+                    </div>
+                {% endfor %}
+            </div> 
         </section>
 
         <section id="advertisement-1">
@@ -31,23 +24,16 @@
         </section>
 
         <section id="grid5-2">
-            <div class="flex">
-                <div class="product-card">
-
-                </div>
-                <div class="product-card">
-                    
-                </div>
-                <div class="product-card">
-                    
-                </div>
-                <div class="product-card">
-                    
-                </div>
-                <div class="product-card">
-                    
-                </div>
-            </div>
+            <div class="product-list flex">
+                {% for product in products[3:6] %}
+                    <div class="product-card">
+                        <img src="../static/images/grass.jpg" alt={{product[2]}}>
+                        <p>{{product[2]}}</p>
+                        <p>{{product[7]}}</p>
+                        <button class="ad-btn">View Item!</button>
+                    </div>
+                {% endfor %}
+            </div> 
         </section>
         
         <section id="advertisement-2">

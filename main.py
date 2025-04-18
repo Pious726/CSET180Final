@@ -28,6 +28,12 @@ def signup():
         return render_template('index.html', error="Failed", success=None)
     
 
+@app.route('/login.html', methods=["GET"])
+def getlogins():
+    conn.execute(text('update users set IsLoggedIn = 0 where IsLoggedIn = 1'))
+    conn.commit()
+    return render_template('login.html')
+
 @app.route('/login.html', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -68,7 +74,8 @@ def logout():
 
 @app.route('/home.html')
 def loadhome():
-    return render_template('home.html')
+    products = conn.execute(text('select * from products natural join Product_Images')).fetchall()
+    return render_template('home.html', products=products)
 
 @app.route('/shop.html', methods=['GET'])
 def loadshop():
@@ -77,7 +84,7 @@ def loadshop():
 
 @app.route('/accounts.html', methods=['GET'])
 def getaccount():
-    account = conn.execute(text('select * from users where IsLoggedIn = 1')).fetchall()
+    account = conn.execute(text('select * from users where IsLoggedIn = 1')).fetchone()
     return render_template('accounts.html', account=account)
 
 @app.route('/orders.html', methods=['GET'])
