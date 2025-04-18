@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, redirect
+from flask import Flask, render_template, request, session, url_for, redirect
 from sqlalchemy import create_engine, text
 import bcrypt
  
@@ -6,6 +6,9 @@ app = Flask(__name__)
 conn_str = "mysql://root:cset155@localhost/shop"
 engine = create_engine(conn_str, echo=True)
 conn = engine.connect()
+
+app.secret_key = 's3cr3t_k3y_@420pizzaTaco'  # Needed to use sessions
+
 
 @app.route('/')
 def loadapp():
@@ -31,25 +34,38 @@ def login():
         email = request.form.get("Email")
         password = request.form.get("Password")
 
-        stored_password = conn.execute(text('Select Password From users Where email_address = :email'), {'email': email}).scalar()
+        user = conn.execute(
+            text('SELECT userID, password, account_type FROM users WHERE email_address = :email'),
+            {'email': email}
+        ).fetchone()
 
-        if stored_password:
+        if user:
+            stored_password = user[1]
             if password == stored_password:
-                conn.execute(text("Update users Set IsLoggedIN = 1 Where email_address = :email"), {"email": email})
+        
+                session['user_id'] = user[0]
+                session['email'] = email
+                session['account_type'] = user[2]
+
+                conn.execute(
+                    text("UPDATE users SET IsLoggedIN = 1 WHERE email_address = :email"),
+                    {"email": email}
+                )
                 conn.commit()
-                return redirect(url_for('loadhome'))  
+                return redirect(url_for('loadhome'))
             else:
                 return render_template('login.html', error='Incorrect email or password.', success=None)
         else:
             return render_template('login.html', error='Account not found.', success=None)
 
-    return render_template('login.html') 
+    return render_template('login.html')
 
 @app.route('/logout')
 def logout():
-    conn.execute(text('Update uesers Set IsLoggedIn = 0 Where IsLoggedIn = 1'))
+    conn.execute(text('Update users Set IsLoggedIn = 0 Where IsLoggedIn = 1'))
     conn.commit()
     return redirect(url_for('login'))
+
 @app.route('/home.html')
 def loadhome():
     return render_template('home.html')
@@ -58,6 +74,20 @@ def loadhome():
 def loadshop():
     products = conn.execute(text('select * from products natural join Product_Images')).fetchall()
     return render_template('shop.html', products=products)
+
+@app.route('/vendor_products')
+def vendor_products():
+    vendor_id = session.get('user_id')  # Get the vendor's user ID from the session
+
+    # Query the database to fetch products created by this vendor
+    products = conn.execute(
+        text('SELECT * FROM products WHERE vendorID = :vendor_id'),
+        {'vendor_id': vendor_id}
+    ).fetchall()  # Fetch all products for the current vendor
+
+    # Render the template and pass the products data
+    return render_template('vendorproducts.html', products=products)
+
 
 
 if __name__ == '__main__':
