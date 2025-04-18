@@ -79,7 +79,10 @@ def loadhome():
 @app.route('/shop.html', methods=['GET'])
 def loadshop():
     products = conn.execute(text('select * from products natural join Product_Images')).fetchall()
-    return render_template('shop.html', products=products)
+    product_sizes = [row[0] for row in conn.execute(text('select distinct Sizes from Product_Sizes')).fetchall()]
+    product_colors = [row[0] for row in conn.execute(text('select distinct Color from Product_Color')).fetchall()]
+
+    return render_template('shop.html', products=products, product_sizes=product_sizes, product_colors=product_colors)
 
 @app.route('/accounts.html', methods=['GET'])
 def getaccount():

@@ -16,13 +16,16 @@
 
                 <h3>Color</h3>
                 <form>
+                    {% for color in product_colors %}
+                        <label><input type="checkbox"> {{color}}</label><br>
+                    {% endfor %}
                 </form>
 
                 <h3>Size</h3>
                 <form>
-                    <label><input type="checkbox"> Small</label><br>
-                    <label><input type="checkbox"> Medium</label><br>
-                    <label><input type="checkbox"> Large</label><br>
+                    {% for size in product_sizes %}
+                        <label><input type="checkbox"> {{size}}</label><br>
+                    {% endfor %}
                 </form>
 
                 <h3>Availability</h3>
