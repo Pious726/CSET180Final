@@ -78,7 +78,40 @@ def loadhome():
 
 @app.route('/shop.html', methods=['GET'])
 def loadshop():
-    products = conn.execute(text('select * from products natural join Product_Images')).fetchall()
+    categories = request.args.getlist('category')
+    colors = request.args.getlist('color')
+    sizes = request.args.getlist('size')
+    availability = request.args.getlist('availability')
+
+    query = '''select * from products 
+    natural join Product_Images 
+    left join Product_Sizes on products.productID = Product_Sizes.productID
+    left join Product_Color on products.productID = Product_Color.productID
+    where 1=1
+    GROUP BY products.productID'''
+
+    params={}
+
+    if categories:
+            query += " and Category in :categories"
+            params['categories'] = tuple(categories)
+
+    if colors:
+        query += " and Color in :colors"
+        params['colors'] = tuple(colors)
+
+    if sizes:
+        query += " and Sizes in :sizes"
+        params['sizes'] = tuple(sizes)
+
+    if availability:
+        if "In Stock" in availability and "Out of Stock" not in availability:
+            query += " and stock > 0"
+        elif "Out of Stock" in availability and "In Stock" not in availability:
+            query += " and stock <= 0"
+
+    products = conn.execute(text(query), params).fetchall()
+
     product_sizes = [row[0] for row in conn.execute(text('select distinct Sizes from Product_Sizes')).fetchall()]
     product_colors = [row[0] for row in conn.execute(text('select distinct Color from Product_Color')).fetchall()]
 
@@ -111,7 +144,6 @@ def vendor_products():
 
     # Render the template and pass the products data
     return render_template('vendorproducts.html', products=products)
-
 
 
 if __name__ == '__main__':

@@ -6,32 +6,25 @@
             <div class="filters">
                 <h2>Filters</h2>
 
-                <h3>Category</h3>
-                <form>
-                    <label><input type="checkbox"> Clothing</label><br>
-                    <label><input type="checkbox"> Toys</label><br>
-                    <label><input type="checkbox"> Plushes</label><br>
-                    <label><input type="checkbox"> Video Games</label><br>
-                </form>
+                <form id="filter-form" method="get" action="{{ url_for('loadshop')}}">
+                    <h3>Category</h3>
+                    {% for category in ['Clothing', 'Toys', 'Plushes', 'Video Games'] %}
+                        <label><input type="checkbox" name="category" value="{{category}}" {% if category in request.args.getlist('category') %}checked{%endif%}> {{category}}</label><br>
+                    {% endfor %}
 
-                <h3>Color</h3>
-                <form>
+                    <h3>Color</h3>
                     {% for color in product_colors %}
-                        <label><input type="checkbox"> {{color}}</label><br>
+                        <label><input type="checkbox" name="color" value="{{color}}" {% if color in request.args.getlist('color') %}checked{%endif%}> {{color}}</label><br>
                     {% endfor %}
-                </form>
 
-                <h3>Size</h3>
-                <form>
+                    <h3>Size</h3>
                     {% for size in product_sizes %}
-                        <label><input type="checkbox"> {{size}}</label><br>
+                        <label><input type="checkbox" name="size" value="{{size}}" {% if size in request.args.getlist('size') %}checked{%endif%}> {{size}}</label><br>
                     {% endfor %}
-                </form>
 
-                <h3>Availability</h3>
-                <form>
-                    <label><input type="checkbox"> In Stock</label><br>
-                    <label><input type="checkbox"> Out of Stock</label><br>
+                    <h3>Availability</h3>
+                    <label><input type="checkbox" name="availability" value="In Stock" {% if 'In Stock' in request.args.getlist('availability') %}checked{%endif%}> In Stock</label><br>
+                    <label><input type="checkbox" name="availability" value="Out of Stock" {% if 'Out of Stock' in request.args.getlist('availability') %}checked{%endif%}> Out of Stock</label><br>
                 </form>
             </div>
             <div class="product-list flex">
@@ -46,4 +39,16 @@
             </div> 
         </div>
     </main>
+<!--
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('filter-form');
+            form.querySelectorAll('input[type=checkbox]').forEach(function (checkbox) {
+                checkbox.addEventListener('change', function () {
+                    form.submit();
+                });
+            });
+        });
+    </script>
+-->
 {% endblock %}
