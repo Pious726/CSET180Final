@@ -117,6 +117,10 @@ def loadshop():
 
     return render_template('shop.html', products=products, product_sizes=product_sizes, product_colors=product_colors)
 
+@app.route('/item.html')
+def loaditem():
+    return render_template('item.html')
+
 @app.route('/accounts.html', methods=['GET'])
 def getaccount():
     account = conn.execute(text('select * from users where IsLoggedIn = 1')).fetchone()

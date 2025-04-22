@@ -303,6 +303,12 @@ section {
     font-size: 1em;
 }
 
+/* Styles for item page */
+.item-btn {
+    text-align: center;
+    margin: 20px 0;
+}
+
 /* Styles for accounts page */
 .account-info {
     background-color: var(--secondaryColor);

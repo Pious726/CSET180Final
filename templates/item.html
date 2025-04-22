@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block body %}
+    <main>
+        <h1 class="page-title">Item Details</h1>
+        <div class="item-btn"><a href="shop.html"><button type="button" class="ad-btn">Back to Shop</button></a></div>
+        
+        <div class="item-info container">
+            <div class="item-img">
+                <img src="{{image}}" alt="{{ITEM NAME}}">
+            </div>
+            <div class="item-text">
+                <h2>ITEM NAME</h2>
+                <p>ITEM DESCRIPTION</p>
+                <h3>Colors</h3>
+                <ul>
+                    {% for color in colors %}
+                    <li>{{color}}</li>
+                    {% endfor %}
+                </ul>
+                <h3>Sizes</h3>
+                <ul>
+                    {% for size in sizes %}
+                    <li>{{size}}</li>
+                    {% endfor %}
+                </ul>
+                {{% if {{inventory}} > 0 %}}
+                <h3>Availability: {{inventory}}</h3>
+                {% elif {{inventory}} <= 0 %}
+                <h3>Out of Stock</h3>
+            </div>
+        </div>
+    </main>
+{% endblock %}
