@@ -427,6 +427,7 @@ footer p {
     color: var(--accentGreen)
 }
 .footer-links {
+    
     padding: 20px 0;
 }
 input.news-email {
@@ -465,6 +466,9 @@ input.news-btn {
 .f-navlist {
     margin-bottom: 5px;
     list-style-type: none;
+}
+.f-navlist li {
+    font-family: 'Noto Sans', sans-serif;
 }
 .f-navlist a:hover {
     color: #5f9e4e;
