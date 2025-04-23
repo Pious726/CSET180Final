@@ -17,6 +17,9 @@
 
         <form class="register" method="POST" action="{{ url_for('login') }}">
             <h1>Log In</h1>
+            {% if error %}
+            <p class="error">{{error}}</p>
+            {% endif %}<br>
             <input type="text" name="Email" placeholder="Email" class="register_input"><br>
             <input type="password" name="Password" placeholder="Password" class="register_input"><br>
 

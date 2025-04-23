@@ -6,27 +6,42 @@
         
         <div class="item-info container">
             <div class="item-img">
-                <img src="{{image}}" alt="{{ITEM NAME}}">
+                <img src="../static/images/grass.jpg" alt="Item">
             </div>
             <div class="item-text">
                 <h2>ITEM NAME</h2>
-                <p>ITEM DESCRIPTION</p>
-                <h3>Colors</h3>
-                <ul>
-                    {% for color in colors %}
-                    <li>{{color}}</li>
-                    {% endfor %}
-                </ul>
-                <h3>Sizes</h3>
-                <ul>
-                    {% for size in sizes %}
-                    <li>{{size}}</li>
-                    {% endfor %}
-                </ul>
-                {{% if {{inventory}} > 0 %}}
-                <h3>Availability: {{inventory}}</h3>
-                {% elif {{inventory}} <= 0 %}
-                <h3>Out of Stock</h3>
+                <h3>ITEM DESCRIPTION:</h3>
+                <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Consectetur adipiscing elit quisque faucibus ex sapien vitae. Ex sapien vitae pellentesque sem placerat in id. Placerat in id cursus mi pretium tellus duis. Pretium tellus duis convallis tempus leo eu aenean.</p>
+                <div class="item-characteristics">
+                    <div class="colors">
+                        <h3>Colors</h3>
+                        <ul>
+                            <li>Color 1</li>
+                            <li>Color 2</li>
+                            <li>Color 3</li>
+                            {% for color in colors %}
+                            <li>{{color}}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="sizes">
+                        <h3>Sizes</h3>
+                        <ul>
+                            <li>Size 1</li>
+                            <li>Size 2</li>
+                            <li>Size 3</li>
+                            {% for size in sizes %}
+                            <li>{{size}}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                {% if inventory %}
+                    <h3>Availability: {{inventory}}</h3>
+                {% elif inventory %}
+                    <h3>Out of Stock</h3>
+                {% endif %}
+                <button class="ad-btn">Add To Cart</button>
             </div>
         </div>
     </main>
