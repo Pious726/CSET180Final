@@ -83,27 +83,18 @@ def loadshop():
     sizes = request.args.getlist('size')
     availability = request.args.getlist('availability')
 
-    query = '''select * from products 
-    natural join Product_Images 
-    left join Product_Sizes on products.productID = Product_Sizes.productID
-    left join Product_Color on products.productID = Product_Color.productID
-    where 1=1
-    GROUP BY products.productID'''
-
+    query = '''select * from products natural join Product_Images'''
     params={}
 
     if categories:
-            query += " and Category in :categories"
-            params['categories'] = tuple(categories)
-
+        query += " and Category in :categories"
+        params['categories'] = tuple(categories)
     if colors:
         query += " and Color in :colors"
         params['colors'] = tuple(colors)
-
     if sizes:
         query += " and Sizes in :sizes"
         params['sizes'] = tuple(sizes)
-
     if availability:
         if "In Stock" in availability and "Out of Stock" not in availability:
             query += " and stock > 0"
@@ -116,6 +107,8 @@ def loadshop():
     product_colors = [row[0] for row in conn.execute(text('select distinct Color from Product_Color')).fetchall()]
 
     return render_template('shop.html', products=products, product_sizes=product_sizes, product_colors=product_colors)
+
+
 
 @app.route('/item.html')
 def loaditem():

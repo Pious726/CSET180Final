@@ -314,7 +314,7 @@ section {
 .item-info {
     display: flex;
     flex-direction: row;
-    margin: 75px auto;
+    margin: 50px auto;
     gap: 20px;
     justify-content: center;
 }
@@ -325,6 +325,10 @@ section {
 }
 .item-text {
     background-color: var(--secondaryColor);
+    border-top: 10px solid #3f3f3f;
+    border-bottom: 10px solid #272624;
+    border-left: 10px solid #3f3f3f;
+    border-right: 10px solid #272624;
     padding: 20px;
     width: 50%;
     height: auto;
