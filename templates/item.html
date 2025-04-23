@@ -6,12 +6,13 @@
         
         <div class="item-info container">
             <div class="item-img">
-                <img src="../static/images/grass.jpg" alt="Item">
+                <img src="{{ session['itemImage'] }}" alt="{{ session['itemName'] }}">
             </div>
             <div class="item-text">
-                <h2>ITEM NAME</h2>
+                <h2>{{ session['itemName'] }}</h2>
+                <p>${{ session['price'] }}</p>
                 <h3>ITEM DESCRIPTION:</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Consectetur adipiscing elit quisque faucibus ex sapien vitae. Ex sapien vitae pellentesque sem placerat in id. Placerat in id cursus mi pretium tellus duis. Pretium tellus duis convallis tempus leo eu aenean.</p>
+                <p>{{ session['itemDesc'] }}</p>
                 <div class="item-characteristics">
                     <div class="colors">
                         <h3>Colors:</h3>

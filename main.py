@@ -6,8 +6,7 @@ app = Flask(__name__)
 conn_str = "mysql://root:cset155@localhost/shop"
 engine = create_engine(conn_str, echo=True)
 conn = engine.connect()
-
-app.secret_key = 's3cr3t_k3y_@420pizzaTaco'  # Needed to use sessions
+app.secret_key = 's3cr3t_k3y_@420pizzaTaco'
 
 
 @app.route('/')
@@ -108,7 +107,13 @@ def loadshop():
 
     return render_template('shop.html', products=products, product_sizes=product_sizes, product_colors=product_colors)
 
-
+@app.route('/shop.html', methods=['POST'])
+def saveiteminfo():
+    session['itemName'] = request.form.get('name')
+    session['price'] = request.form.get('price')
+    session['itemDesc'] = request.form.get('description')
+    session['itemImage'] = request.form.get('image')
+    return redirect(url_for('loaditem'))
 
 @app.route('/item.html')
 def loaditem():
