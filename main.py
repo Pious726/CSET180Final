@@ -88,17 +88,128 @@ def getorders():
 
 @app.route('/vendor_products')
 def vendor_products():
-    vendor_id = session.get('user_id')  # Get the vendor's user ID from the session
+    user_id = session.get('user_id')  # Get the user's ID from session
 
-    # Query the database to fetch products created by this vendor
+    if not user_id:
+        return redirect(url_for('login'))
+
+    # Get the actual vendorID from the vendor table
+    vendor_id = conn.execute(
+        text('SELECT vendorID FROM vendor WHERE userID = :user_id'),
+        {'user_id': user_id}
+    ).scalar()
+
+    if not vendor_id:
+        return "You are not registered as a vendor."
+
+    # Fetch products using the correct vendorID
     products = conn.execute(
         text('SELECT * FROM products WHERE vendorID = :vendor_id'),
         {'vendor_id': vendor_id}
-    ).fetchall()  # Fetch all products for the current vendor
+    ).fetchall()
 
-    # Render the template and pass the products data
     return render_template('vendorproducts.html', products=products)
+@app.route('/edit_product/<int:product_id>', methods=['GET', 'POST'])
+def edit_product(product_id):
+    if request.method == 'POST':
+        form = request.form
 
+        # Update main product info
+        conn.execute(text("""
+            UPDATE products
+            SET Title = :title,
+                Description = :description,
+                Warranty = :warranty,
+                Inventory = :inventory,
+                Original_Price = :original_price,
+                Discount_Price = :discount_price
+            WHERE ProductID = :product_id
+        """), {
+            'title': form.get('title'),
+            'description': form.get('description'),
+            'warranty': form.get('warranty'),
+            'inventory': form.get('inventory'),
+            'original_price': form.get('original_price'),
+            'discount_price': form.get('discount_price'),
+            'product_id': product_id
+        })
+
+       
+        if form.get('new_size'):
+            conn.execute(text("INSERT INTO product_sizes (ProductID, Size) VALUES (:product_id, :size)"),
+                         {'product_id': product_id, 'size': form.get('new_size')})
+
+        if form.get('new_color'):
+            conn.execute(text("INSERT INTO product_color (ProductID, Color) VALUES (:product_id, :color)"),
+                         {'product_id': product_id, 'color': form.get('new_color')})
+
+      
+        if form.get('new_image'):
+            conn.execute(text("INSERT INTO product_images (ProductID, Images) VALUES (:product_id, :image)"),
+                         {'product_id': product_id, 'image': form.get('new_image')})
+
+        conn.commit()
+        return redirect(url_for('vendor_products'))
+        
+
+    
+    product = conn.execute(
+        text("SELECT * FROM products WHERE ProductID = :product_id"),
+        {'product_id': product_id}
+    ).fetchone()
+
+    return render_template('editproduct.html', product=product)
+
+@app.route('/add_product', methods=['GET', 'POST'])
+def add_product():
+    if request.method == 'POST':
+        try:
+            form = request.form
+            user_id = session.get('user_id')
+            vendor_id = conn.execute(
+                text('SELECT vendorID FROM vendor WHERE userID = :user_id'),
+                {'user_id': user_id}
+            ).scalar()
+
+            conn.execute(text("""
+                Insert Into products (VendorID, Title, Description, Warranty, Inventory, Original_Price, Discount_Price)
+                Values (:vendor_id, :title, :description, :warranty, :inventory, :original_price, :discount_price)
+            """), {
+                'vendor_id': vendor_id,
+                'title': form.get('title'),
+                'description': form.get('description'),
+                'warranty': form.get('warranty'),
+                'inventory': form.get('inventory'),
+                'original_price': form.get('original_price'),
+                'discount_price': form.get('discount_price')
+            })
+
+            product_id = conn.execute(text("Select Last_Insert_ID()")).scalar()
+
+            if form.get('new_size'):
+                conn.execute(text("Insert Into product_sizes (ProductID, Sizes) Values (:product_id, :size)"),
+                             {'product_id': product_id, 'size': form.get('new_size')})
+
+            if form.get('new_color'):
+                conn.execute(text("Insert Into product_color (ProductID, Color) Values (:product_id, :color)"),
+                             {'product_id': product_id, 'color': form.get('new_color')})
+
+            if form.get('new_image'):
+                conn.execute(text("Insert Into product_images (ProductID, Images) Values (:product_id, :image)"),
+                             {'product_id': product_id, 'image': form.get('new_image')})
+
+            conn.commit()
+            return redirect(url_for('vendor_products'))
+        except:
+            conn.rollback()
+            return "Something went wrong while adding your product."
+
+    return render_template('addproduct.html')
+
+
+
+
+        
 
 
 if __name__ == '__main__':

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<main>
+    <h1>Edit Products</h1>
+    <form method="post">
+        <label>Title: <input type="text" name="title" value="{{ product.Title }}"></label><br>
+        <label>Description: <input type="text" name="description" value="{{ product.Description }}"></label><br>
+        <label>Warranty: <input type="date" name="warranty" value="{{ product.Warranty }}"></label><br>
+        <label>Inventory: <input type="number" name="inventory" value="{{ product.Inventory }}"></label>
+        <label>Original Price: <input type="number" step="0.01" name="original_price" value="{{ product.Original_Price }}"></label>
+        <label>Discount Price: <input type="number" step="0.01" name="discount_price" value="{{ product.Discount_Price }}"></label>
+        
+        <hr>
+        <label>Add Size: <input type="text" name="new_size"></label>
+        <label>Add Color: <input type="text"name="new_color"></label>
+        <label>Add Image URL: <input type="text" name="new_image"></label>
+   
+        <button type="submit">Save Changes</button>
+    </form>
+</main>
+{% endblock %}
