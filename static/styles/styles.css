@@ -389,6 +389,18 @@ section {
 .cart-img {
     width: 100px;
 }
+.quantity{
+    padding: 2px;
+    background-color: var(--secondaryColor);
+    border-top: 2px solid #3f3f3f;
+    border-bottom: 2px solid #272624;
+    border-left: 2px solid #3f3f3f;
+    border-right: 2px solid #272624;
+    color: var(--textColor);
+    font-family: 'MinecraftSeven', sans-serif;
+    font-size: 16px;
+    font-weight: 100;
+}
 
 /* Styles for accounts page */
 .account-info {

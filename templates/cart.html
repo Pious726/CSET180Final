@@ -3,30 +3,39 @@
     <main>
         <h1 class="page-title">Your Cart</h1>
         <div class="cart container">
-            {% for item in cartItems%}
-                <div class="cart-item-card">
-                    <div class="cart-item">
-                        <div class="cart-img">
-                            <img src="../static/images/grass.jpg" alt="{{item[3]}}">
+            {% if cartItems %}
+                {% for item in cartItems%}
+                    <div class="cart-item-card">
+                        <div class="cart-item">
+                            <div class="cart-img">
+                                <img src="../static/images/grass.jpg" alt="{{item[3]}}">
+                            </div>
+                            <div class="cart-info">
+                                <p>{{item[3]}}</p>
+                                <p>${{item[8]}}</p>
+                                <input type="number" name="quantity" class="quantity" value="1" min="1" max="99">
+                            </div>
                         </div>
-                        <div class="cart-info">
-                            <p>{{item[3]}}</p>
-                            <p>${{item[8]}}</p>
+                        
+                        <div class="cartitem-form">
+                            
+                            <form>
+                                <button type="button" class="ad-btn">Remove</button>
+                            </form>
                         </div>
                     </div>
-                    
-                    <div class="cartitem-form">
-                        <form>
-                            <button type="button" class="ad-btn">Remove</button>
-                        </form>
-                    </div>
-                </div>
-                <hr>
-            {% endfor %}
-            
-            <form method="POST">
-                <button type="button" class="ad-btn">Order!</button>
-            </form>
+                    <hr>
+                {% endfor %}
+
+                <p>Total Price: $1000.00</p>
+                <form method="POST">
+                    <button type="button" class="ad-btn">Order!</button>
+                </form>
+            {% endif %}
+            {% if cartItems == None %}
+                <p>You currently have no items in your cart!</p>
+                <a href="shop.html"><button type="button" class="ad-btn">Shop Here!</button></a>
+            {% endif %}
         </div>
     </main>
 {% endblock %}
