@@ -3,26 +3,29 @@
     <main>
         <h1 class="page-title">Your Cart</h1>
         <div class="cart container">
-            <div class="cart-item-card">
-                <div class="cart-item">
-                    <div class="cart-img">
-                        <img src="#" alt="item">
+            {% for item in cartItems%}
+                <div class="cart-item-card">
+                    <div class="cart-item">
+                        <div class="cart-img">
+                            <img src="../static/images/grass.jpg" alt="{{item[3]}}">
+                        </div>
+                        <div class="cart-info">
+                            <p>{{item[3]}}</p>
+                            <p>${{item[8]}}</p>
+                        </div>
                     </div>
-                    <div class="cart-info">
-                        <p>Item Name</p>
-                        <p>Item Price</p>
+                    
+                    <div class="cartitem-form">
+                        <form>
+                            <button type="button" class="ad-btn">Remove</button>
+                        </form>
                     </div>
                 </div>
-                
-                <div class="cartitem-form">
-                    <form>
-                        <button type="button" class="ad-btn">Remove</button>
-                    </form>
-                </div>
-            </div>
-            <hr>
+                <hr>
+            {% endfor %}
+            
             <form method="POST">
-                <button type="submit" class="ad-btn">Order!</button>
+                <button type="button" class="ad-btn">Order!</button>
             </form>
         </div>
     </main>

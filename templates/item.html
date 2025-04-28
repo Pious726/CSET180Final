@@ -4,6 +4,12 @@
         <h1 class="page-title">Item Details</h1>
         <div class="item-btn"><a href="shop.html"><button type="button" class="ad-btn">Back to Shop</button></a></div>
         
+        {% if error %}
+            <p class="error">{{error}}</p>
+        {% elif success %}
+            <p class="error">{{success}}</p>
+        {% endif %}
+
         <div class="item-info container">
             <div class="item-img">
                 <img src="{{ session['itemImage'] }}" alt="{{ session['itemName'] }}">
@@ -42,7 +48,11 @@
                 {% elif inventory %}
                     <h3>Out of Stock</h3>
                 {% endif %}
-                <button class="ad-btn">Add To Cart</button>
+
+                <form action="/item.html" method="POST">
+                    <input type="hidden" name="id" value="{{ session['itemID'] }}">
+                    <button type="submit" class="ad-btn">Add To Cart</button>
+                </form>
             </div>
         </div>
     </main>

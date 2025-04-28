@@ -379,11 +379,15 @@ section {
     flex-direction: row;
     justify-content: space-between;
     width: 100%;
+    margin-bottom: 15px;
 }
 .cart-item {
     display: flex;
     flex-direction: row;
     gap: 15px;
+}
+.cart-img {
+    width: 100px;
 }
 
 /* Styles for accounts page */

@@ -109,6 +109,7 @@ def loadshop():
 
 @app.route('/shop.html', methods=['POST'])
 def saveiteminfo():
+    session['itemID'] = request.form.get('id')
     session['itemName'] = request.form.get('name')
     session['price'] = request.form.get('price')
     session['itemDesc'] = request.form.get('description')
@@ -118,6 +119,29 @@ def saveiteminfo():
 @app.route('/item.html')
 def loaditem():
     return render_template('item.html')
+
+@app.route('/item.html', methods=['POST'])
+def addtocart():
+        try:
+            customerID = conn.execute(text('select customerID from users natural join customer where IsLoggedIn = 1;')).scalar()
+            cartID = conn.execute(text(f'select cartID from cart where customerID = {customerID}'), ).scalar()
+            productID = session.get('itemID')
+            conn.execute(text(f'insert into Cart_Items (cartID, productID) values ({cartID}, {productID})'))
+            conn.commit()
+            return render_template('item.html', success="Item added to cart successfully.", error=None)
+        except:
+            return render_template('item.html', success=None, error="Error adding item to cart.")
+
+@app.route('/cart.html')
+def getcartitems():
+    customerID = conn.execute(text('select customerID from users natural join customer where IsLoggedIn = 1;')).scalar()
+    cartID = conn.execute(text(f'select cartID from cart where customerID = {customerID}'), ).scalar()
+    cartItems = conn.execute(text(f'select * from Cart_Items natural join products where cartID = {cartID}'))
+    return render_template('cart.html', cartItems=cartItems)
+
+@app.route('/cart.html', methods=['POST'])
+def removeitem():
+    return render_template('cart.html')
 
 @app.route('/accounts.html', methods=['GET'])
 def getaccount():
@@ -129,10 +153,6 @@ def getorders():
     customerID = conn.execute(text('select customerID from customer natural join users where IsLoggedIn = 1')).scalar()
     orders = conn.execute(text(f'select * from orders where customerID = {customerID}')).fetchall()
     return render_template('orders.html', orders=orders)
-
-@app.route('/cart.html')
-def getcartitems():
-    return render_template('cart.html')
 
 @app.route('/vendor_products')
 def vendor_products():
