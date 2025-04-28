@@ -1,9 +1,17 @@
 {% extends 'base.html' %}
 {% block body %}
     <main>
-        <h1 class="page-title">Order Information</h1>
+        <h1 class="page-title">Order Informƒtion</h1>
         <div class="order-info">
-            
+            {% for order in orders%}
+                <div class="order-card">
+                    <p>Order ID: {{order[0]}}</p>
+                    <p>Date of Order: {{order[2]}}</p>
+                    <p>Total Price: ${{order[3]}}</p>
+                    <p>Shipping Status: {{order[4]}}</p>
+                    <button class="ad-btn">Issue a return?</button>
+                </div>
+            {% endfor %}
         </div>
     </main>
 {% endblock %}

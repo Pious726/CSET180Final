@@ -1,9 +1,13 @@
 {% extends 'base.html' %}
 {% block body %}
-    <main>
-        <h1 class="page-title">Account Information</h1>
-        <div class="account-info">
-            <p>{{account[1]}}</p>
+    <main class="account-main">
+        <h1 class="page-title">Account Informƒtion</h1>
+        <div class="account-info container">
+            <p>Name: {{account[1]}}</p>
+            <p>Email Address: {{account[2]}}</p>
+            <p>Username: {{account[3]}}</p>
+            <p>Password: {{account[4]}}</p>
+            <p>Account Type: {{account[5]}}</p>
         </div>
     </main>
 {% endblock %}

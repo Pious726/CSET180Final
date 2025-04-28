@@ -27,6 +27,11 @@ def signup():
     except:
         return render_template('index.html', error="Failed", success=None)
     
+@app.route('/login.html', methods=["GET"])
+def getlogins():
+    conn.execute(text('update users set IsLoggedIn = 0 where IsLoggedIn = 1'))
+    conn.commit()
+    return render_template('login.html')
 
 @app.route('/login.html', methods=['GET', 'POST'])
 def login():
@@ -68,23 +73,68 @@ def logout():
 
 @app.route('/home.html')
 def loadhome():
-    return render_template('home.html')
+    products = conn.execute(text('select * from products natural join Product_Images')).fetchall()
+    return render_template('home.html', products=products)
 
 @app.route('/shop.html', methods=['GET'])
 def loadshop():
-    products = conn.execute(text('select * from products natural join Product_Images')).fetchall()
-    return render_template('shop.html', products=products)
+    categories = request.args.getlist('category')
+    colors = request.args.getlist('color')
+    sizes = request.args.getlist('size')
+    availability = request.args.getlist('availability')
+
+    query = '''select * from products 
+    natural join Product_Images 
+    left join Product_Sizes on products.productID = Product_Sizes.productID
+    left join Product_Color on products.productID = Product_Color.productID
+    where 1=1
+    GROUP BY products.productID'''
+
+    params={}
+
+    if categories:
+            query += " and Category in :categories"
+            params['categories'] = tuple(categories)
+
+    if colors:
+        query += " and Color in :colors"
+        params['colors'] = tuple(colors)
+
+    if sizes:
+        query += " and Sizes in :sizes"
+        params['sizes'] = tuple(sizes)
+
+    if availability:
+        if "In Stock" in availability and "Out of Stock" not in availability:
+            query += " and stock > 0"
+        elif "Out of Stock" in availability and "In Stock" not in availability:
+            query += " and stock <= 0"
+
+    products = conn.execute(text(query), params).fetchall()
+
+    product_sizes = [row[0] for row in conn.execute(text('select distinct Sizes from Product_Sizes')).fetchall()]
+    product_colors = [row[0] for row in conn.execute(text('select distinct Color from Product_Color')).fetchall()]
+
+    return render_template('shop.html', products=products, product_sizes=product_sizes, product_colors=product_colors)
+
+@app.route('/item.html')
+def loaditem():
+    return render_template('item.html')
 
 @app.route('/accounts.html', methods=['GET'])
 def getaccount():
-    account = conn.execute(text('select * from users where IsLoggedIn = 1')).fetchall()
+    account = conn.execute(text('select * from users where IsLoggedIn = 1')).fetchone()
     return render_template('accounts.html', account=account)
 
 @app.route('/orders.html', methods=['GET'])
 def getorders():
-    customerID = conn.execute(text('select customerID from customers natural join users where IsLoggedIn = 1')).scalar()
+    customerID = conn.execute(text('select customerID from customer natural join users where IsLoggedIn = 1')).scalar()
     orders = conn.execute(text(f'select * from orders where customerID = {customerID}')).fetchall()
     return render_template('orders.html', orders=orders)
+
+@app.route('/cart.html')
+def getcartitems():
+    return render_template('cart.html')
 
 @app.route('/vendor_products')
 def vendor_products():
@@ -210,7 +260,6 @@ def add_product():
 
 
         
-
 
 if __name__ == '__main__':
     app.run(debug=True)

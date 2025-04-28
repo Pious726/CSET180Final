@@ -12,7 +12,7 @@
 </head>
 <body>
 <div class="top">
-        <img class="baselogo" src="../static/Images/minecraftlogo.svg" alt="logo">
+        <a href="home.html"><img class="baselogo" src="../static/Images/minecraftlogo.svg" alt="logo"></a>
 </div>
     <header>
         <nav class="navbar">
@@ -25,6 +25,7 @@
                 {% if session.get('account_type') == 'vendor' %}
                 <li><a href="{{ url_for('vendor_products') }}">MY PRODUCTS</a></li>
                 {% endif %}
+                <li><a href="{{ url_for('logout')}}">LOG OUT</a></li>
             </ul>
         </nav>
         <div class="header-image"></div>
@@ -35,7 +36,7 @@
 
     <footer>
         <div class="socials">
-            <p>Follow us here!</p>
+            <p>Follow Minecraft</p>
             <div class="social-icons flex">
                 <a href="https://www.facebook.com/minecraft"><ion-icon name="logo-facebook"></ion-icon></a>
                 <a href="https://x.com/minecraft"><ion-icon name="logo-twitter"></ion-icon></a>
