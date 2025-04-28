@@ -314,7 +314,7 @@ section {
 .item-info {
     display: flex;
     flex-direction: row;
-    margin: 50px auto;
+    margin: 20px auto;
     gap: 20px;
     justify-content: center;
 }
@@ -363,6 +363,29 @@ section {
     margin: 20px 0;
 }
 
+/* Styles for cart */
+.cart {
+    background-color: var(--secondaryColor);
+    border-top: 10px solid #3f3f3f;
+    border-bottom: 10px solid #272624;
+    border-left: 10px solid #3f3f3f;
+    border-right: 10px solid #272624;
+    width: 75%;
+    padding: 20px;
+    margin: 20px auto;
+}
+.cart-item-card {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+.cart-item {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+}
+
 /* Styles for accounts page */
 .account-info {
     background-color: var(--secondaryColor);
@@ -396,7 +419,7 @@ section {
     border-right: 10px solid #272624;
     text-align: center;
     padding: 30px;
-    margin: 20px;
+    margin: 0 20px 20px 20px;
 }
 .order-card p {
     margin: 10px 0;

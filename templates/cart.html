@@ -2,5 +2,28 @@
 {% block body %}
     <main>
         <h1 class="page-title">Your Cart</h1>
+        <div class="cart container">
+            <div class="cart-item-card">
+                <div class="cart-item">
+                    <div class="cart-img">
+                        <img src="#" alt="item">
+                    </div>
+                    <div class="cart-info">
+                        <p>Item Name</p>
+                        <p>Item Price</p>
+                    </div>
+                </div>
+                
+                <div class="cartitem-form">
+                    <form>
+                        <button type="button" class="ad-btn">Remove</button>
+                    </form>
+                </div>
+            </div>
+            <hr>
+            <form method="POST">
+                <button type="submit" class="ad-btn">Order!</button>
+            </form>
+        </div>
     </main>
 {% endblock %}
