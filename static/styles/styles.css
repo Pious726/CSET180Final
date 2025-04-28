@@ -244,6 +244,20 @@ section {
 .ad-text-box p {
     margin-bottom: 15px;
 }
+
+.vendor-btn {
+    background-color: var(--accentGreen);
+    border-top: 4px solid #83c471;
+    border-bottom: 4px solid #5f9e4e;
+    border-left: 4px solid #83c471;
+    border-right: 4px solid #5f9e4e;
+    color: var(--textColor);
+    padding: 5px 10px;
+    cursor: pointer;
+    bottom: 10px;
+    position: relative;
+}
+
 .ad-btn {
     background-color: var(--accentGreen);
     border-top: 4px solid #83c471;
@@ -295,6 +309,32 @@ section {
 .product-list.flex {
     align-items: start;
 }
+
+.vendor-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #171615;
+    padding: 10px;
+    height: 600px;
+    font-size: .9em;
+    border-top: 5px solid #2c2a28;   
+    border-left: 5px solid #2c2a28; 
+    border-right: 5px solid #0e0d0c;
+    border-bottom: 5px solid #0e0d0c;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+}
+
+.vendor-actions {
+    margin-top: auto;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: space-between;
+}
+
 .product-card {
     color: var(--textColor);
     text-align: center;

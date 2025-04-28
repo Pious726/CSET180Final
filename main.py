@@ -159,6 +159,7 @@ def vendor_products():
     ).fetchall()
 
     return render_template('vendorproducts.html', products=products)
+
 @app.route('/edit_product/<int:product_id>', methods=['GET', 'POST'])
 def edit_product(product_id):
     if request.method == 'POST':
@@ -184,31 +185,65 @@ def edit_product(product_id):
             'product_id': product_id
         })
 
-       
-        if form.get('new_size'):
-            conn.execute(text("INSERT INTO product_sizes (ProductID, Size) VALUES (:product_id, :size)"),
-                         {'product_id': product_id, 'size': form.get('new_size')})
+        # Insert a new size if provided
+        new_size = form.get('new_size')
+        if new_size:
+            conn.execute(text("""
+                INSERT INTO product_sizes (ProductID, Sizes)
+                VALUES (:product_id, :size)
+            """), {'product_id': product_id, 'size': new_size})
 
-        if form.get('new_color'):
-            conn.execute(text("INSERT INTO product_color (ProductID, Color) VALUES (:product_id, :color)"),
-                         {'product_id': product_id, 'color': form.get('new_color')})
+        # Insert a new color if provided
+        new_color = form.get('new_color')
+        if new_color:
+            conn.execute(text("""
+                INSERT INTO product_color (ProductID, Color)
+                VALUES (:product_id, :color)
+            """), {'product_id': product_id, 'color': new_color})
 
-      
-        if form.get('new_image'):
-            conn.execute(text("INSERT INTO product_images (ProductID, Images) VALUES (:product_id, :image)"),
-                         {'product_id': product_id, 'image': form.get('new_image')})
+        # Insert a new image if provided
+        new_image = form.get('new_image')
+        if new_image:
+            conn.execute(text("""
+                INSERT INTO product_images (ProductID, Images)
+                VALUES (:product_id, :image)
+            """), {'product_id': product_id, 'image': new_image})
 
+        # Commit changes
         conn.commit()
-        return redirect(url_for('vendor_products'))
-        
 
-    
+        # Redirect to the vendor's products page
+        return redirect(url_for('vendor_products'))
+
+    # Fetch the product details for display
     product = conn.execute(
         text("SELECT * FROM products WHERE ProductID = :product_id"),
         {'product_id': product_id}
     ).fetchone()
 
-    return render_template('editproduct.html', product=product)
+    # Fetch existing sizes, colors, and images for this product
+    sizes = conn.execute(
+        text("SELECT Sizes FROM product_sizes WHERE ProductID = :product_id"),
+        {'product_id': product_id}
+    ).fetchall()
+
+    colors = conn.execute(
+        text("SELECT Color FROM product_color WHERE ProductID = :product_id"),
+        {'product_id': product_id}
+    ).fetchall()
+
+    images = conn.execute(
+        text("SELECT Images FROM product_images WHERE ProductID = :product_id"),
+        {'product_id': product_id}
+    ).fetchall()
+
+    # Pass the data to the template
+    return render_template('editproduct.html', 
+                           product=product, 
+                           sizes=[size[0] for size in sizes],
+                           colors=[color[0] for color in colors],
+                           images=[image[0] for image in images])
+
 
 @app.route('/add_product', methods=['GET', 'POST'])
 def add_product():
@@ -256,7 +291,17 @@ def add_product():
 
     return render_template('addproduct.html')
 
+@app.route('/delete_product/<int:product_id>', methods=['POST'])
+def delete_product(product_id):
 
+    conn.execute(text("Delete From product_images Where ProductID = :product_id"), {'product_id': product_id})
+    conn.execute(text("Delete From product_sizes Where ProductID = :product_id"), {'product_id': product_id})
+    conn.execute(text("Delete From product_color Where ProductID = :product_id"), {'product_id': product_id})
+
+    conn.execute(text("Delete From products Where ProductID = :product_id"), {'product_id': product_id})
+    conn.commit()
+
+    return redirect(url_for('vendor_products'))
 
 
         

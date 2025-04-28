@@ -4,8 +4,8 @@
     <h1 class="page-title">Your Products</h1>
     <div class="product-list flex">
         {% for product in products %}
-            <div class="product-card">
-               
+        <div class="vendor-card">
+            <div class="vendor-content">
                 <h3>Product ID: {{ product[0] }}</h3><br>
                 <p><strong>Title:</strong> {{ product[2] }}</p><br>
                 <p><strong>Description:</strong> {{ product[3] }}</p><br>  
@@ -13,22 +13,29 @@
                 <p><strong>Inventory:</strong> {{ product[5] }}</p><br>
                 <p><strong>Original Price:</strong> ${{ product[6] }}</p>
                 <p><strong>Discount Price:</strong> ${{ product[7] }}</p><br>
-
-               
-                <a href="{{ url_for('edit_product', product_id=product[0]) }}">
-                    <button class="edit-btn">Edit</button>
-                </a>
-               
-
             </div>
-
-            
-            <a  href="{{ url_for('add_product') }}">
-                <button>Add New Product</button>
-            </a>
+        
+            <div class="vendor-actions">
+                <a href="{{ url_for('edit_product', product_id=product[0]) }}">
+                    <button class="edit-btn vendor-btn">Edit</button>
+                </a>
+        
+                <form action="{{ url_for('delete_product', product_id=product[0]) }}" method="post">
+                    <button class="vendor-btn" type="submit" onclick="return confirm('Are you sure you want to delete this product?');">Delete</button>
+                </form>
+            </div>
+        </div>
+        
+          
         {% else %}
             <p>You haven't created any products yet.</p>
         {% endfor %}
     </div>
+    <a  href="{{ url_for('add_product') }}">
+        <button  class="vendor-btn">Add New Product</button>
+    </a>
+
+    
+    
 </main>
 {% endblock %}z
