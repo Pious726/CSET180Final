@@ -136,14 +136,26 @@ def getorders():
 def getcartitems():
     return render_template('cart.html')
 
+@app.route('/all_products')
+def all_products():
+    
+    user_id = session.get('user_id')
+    account_type = session.get('account_type')
+
+    if not user_id or account_type != 'admin':
+        return redirect(url_for('login'))
+    
+    products = conn.execute(text('select * from products')).fetchall()
+
+    return render_template('all_products.html', products=products)
+
 @app.route('/vendor_products')
 def vendor_products():
-    user_id = session.get('user_id')  # Get the user's ID from session
+    user_id = session.get('user_id') 
 
     if not user_id:
         return redirect(url_for('login'))
 
-    # Get the actual vendorID from the vendor table
     vendor_id = conn.execute(
         text('SELECT vendorID FROM vendor WHERE userID = :user_id'),
         {'user_id': user_id}
@@ -152,7 +164,6 @@ def vendor_products():
     if not vendor_id:
         return "You are not registered as a vendor."
 
-    # Fetch products using the correct vendorID
     products = conn.execute(
         text('SELECT * FROM products WHERE vendorID = :vendor_id'),
         {'vendor_id': vendor_id}
@@ -162,19 +173,21 @@ def vendor_products():
 
 @app.route('/edit_product/<int:product_id>', methods=['GET', 'POST'])
 def edit_product(product_id):
+    user_id = session.get('user_id')
+    account_type = session.get('account_type')
+
     if request.method == 'POST':
         form = request.form
 
-        # Update main product info
         conn.execute(text("""
-            UPDATE products
-            SET Title = :title,
+            update products
+            set Title = :title,
                 Description = :description,
                 Warranty = :warranty,
                 Inventory = :inventory,
                 Original_Price = :original_price,
                 Discount_Price = :discount_price
-            WHERE ProductID = :product_id
+            where ProductID = :product_id
         """), {
             'title': form.get('title'),
             'description': form.get('description'),
@@ -185,61 +198,73 @@ def edit_product(product_id):
             'product_id': product_id
         })
 
-        # Insert a new size if provided
         new_size = form.get('new_size')
         if new_size:
             conn.execute(text("""
-                INSERT INTO product_sizes (ProductID, Sizes)
-                VALUES (:product_id, :size)
+                insert into product_sizes (ProductID, Sizes)
+                values (:product_id, :size)
             """), {'product_id': product_id, 'size': new_size})
 
-        # Insert a new color if provided
         new_color = form.get('new_color')
         if new_color:
             conn.execute(text("""
-                INSERT INTO product_color (ProductID, Color)
-                VALUES (:product_id, :color)
+                insert into product_color (ProductID, Color)
+                values (:product_id, :color)
             """), {'product_id': product_id, 'color': new_color})
 
-        # Insert a new image if provided
+      
         new_image = form.get('new_image')
         if new_image:
             conn.execute(text("""
-                INSERT INTO product_images (ProductID, Images)
-                VALUES (:product_id, :image)
+                insert into product_images (ProductID, Images)
+                values (:product_id, :image)
             """), {'product_id': product_id, 'image': new_image})
 
-        # Commit changes
+       
         conn.commit()
 
-        # Redirect to the vendor's products page
-        return redirect(url_for('vendor_products'))
+        if account_type == 'admin':  
+            return redirect(url_for('all_products'))
+        else:
+            return redirect(url_for('vendor_products'))
 
-    # Fetch the product details for display
-    product = conn.execute(
-        text("SELECT * FROM products WHERE ProductID = :product_id"),
-        {'product_id': product_id}
-    ).fetchone()
+    
+    if account_type == 'admin':  
+        product = conn.execute(
+            text("select * from products where ProductID = :product_id"),
+            {'product_id': product_id}
+        ).fetchone()
+    else:
+        vendor_id = conn.execute(
+            text("select vendorID from vendor where userID = :user_id"),
+            {'user_id': user_id}
+        ).scalar()
 
-    # Fetch existing sizes, colors, and images for this product
+        product = conn.execute(
+            text("select * from products where ProductID = :product_id and vendorID = :vendor_id"),
+            {'product_id': product_id, 'vendor_id': vendor_id}
+        ).fetchone()
+
+    if not product:
+        return "Product not found", 404
+
     sizes = conn.execute(
-        text("SELECT Sizes FROM product_sizes WHERE ProductID = :product_id"),
+        text("select Sizes from product_sizes where ProductID = :product_id"),
         {'product_id': product_id}
     ).fetchall()
 
     colors = conn.execute(
-        text("SELECT Color FROM product_color WHERE ProductID = :product_id"),
+        text("select Color from product_color where ProductID = :product_id"),
         {'product_id': product_id}
     ).fetchall()
 
     images = conn.execute(
-        text("SELECT Images FROM product_images WHERE ProductID = :product_id"),
+        text("select Images from product_images where ProductID = :product_id"),
         {'product_id': product_id}
     ).fetchall()
 
-    # Pass the data to the template
-    return render_template('editproduct.html', 
-                           product=product, 
+    return render_template('editproduct.html',
+                           product=product,
                            sizes=[size[0] for size in sizes],
                            colors=[color[0] for color in colors],
                            images=[image[0] for image in images])
