@@ -13,7 +13,11 @@
                             <div class="cart-info">
                                 <p>{{item[4]}}</p>
                                 <p>${{item[9]}}</p>
-                                <input type="number" name="quantity" class="quantity" value="{{item[2]}}" min="1" max="99">
+                                <form action="/update_quantity" method="POST">
+                                    <input type="hidden" name="id" value="{{ item[0] }}">
+                                    <input type="number" name="quantity" class="quantity" value="{{item[2]}}" min="1" max="99">
+                                    <button type="submit" class="ad-btn">Update</button>
+                                </form>
                             </div>
                         </div>
                         

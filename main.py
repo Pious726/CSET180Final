@@ -136,10 +136,9 @@ def addtocart():
 def getcartitems():
     totalPrice = 0
     customerID = conn.execute(text('select customerID from users natural join customer where IsLoggedIn = 1')).scalar()
-    cartID = conn.execute(text(f'select cartID from cart where customerID = {customerID}'), ).scalar()
+    cartID = conn.execute(text(f'select cartID from cart where customerID = {customerID}')).scalar()
     cartItems = list(conn.execute(text(f'select * from Cart_Items natural join products where cartID = {cartID}')))
     totalPrice = sum(item[9] * item[2] for item in cartItems)
-
     return render_template('cart.html', cartItems=cartItems, totalPrice=totalPrice)
 
 @app.route('/cart.html', methods=['POST'])
@@ -148,6 +147,16 @@ def removeitem():
     cartID = conn.execute(text(f'select cartID from cart where customerID = {customerID}')).scalar()
     productID = request.form.get('id')
     conn.execute(text(f'delete from Cart_Items where productID = {productID} and cartID = {cartID}'))
+    conn.commit()
+    return redirect(url_for('getcartitems'))
+
+@app.route('/update_quantity', methods=['POST'])
+def update_quantity():
+    new_quantity = request.form.get('quantity')
+    customerID = conn.execute(text('select customerID from users natural join customer where IsLoggedIn = 1;')).scalar()
+    cartID = conn.execute(text(f'select cartID from cart where customerID = {customerID}')).scalar()
+    productID = request.form.get('id')
+    conn.execute(text(f'update Cart_Items set Quantity = {new_quantity} where cartID = {cartID} and productID = {productID}'))
     conn.commit()
     return redirect(url_for('getcartitems'))
 
