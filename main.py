@@ -272,14 +272,21 @@ def edit_product(product_id):
 
 @app.route('/add_product', methods=['GET', 'POST'])
 def add_product():
+    account_type = session.get('account_type')
+    user_id = session.get('user_id')
+
     if request.method == 'POST':
         try:
             form = request.form
-            user_id = session.get('user_id')
-            vendor_id = conn.execute(
-                text('SELECT vendorID FROM vendor WHERE userID = :user_id'),
-                {'user_id': user_id}
-            ).scalar()
+
+            if account_type == 'admin':
+                vendor_id = form.get('vendor_id')
+            else:
+                
+                vendor_id = conn.execute(
+                    text('SELECT vendorID FROM vendor WHERE userID = :user_id'),
+                    {'user_id': user_id}
+                ).scalar()
 
             conn.execute(text("""
                 Insert Into products (VendorID, Title, Description, Warranty, Inventory, Original_Price, Discount_Price)
@@ -309,15 +316,26 @@ def add_product():
                              {'product_id': product_id, 'image': form.get('new_image')})
 
             conn.commit()
-            return redirect(url_for('vendor_products'))
+
+            if account_type == 'admin':
+                return redirect(url_for('all_products'))
+            else:
+                return redirect(url_for('vendor_products'))
+            
         except:
             conn.rollback()
             return "Something went wrong while adding your product."
-
-    return render_template('addproduct.html')
+        
+    vendors = []
+    if account_type == 'admin':
+        vendors = conn.execute(text("select VendorID, Name from vendor")).fetchall()
+    return render_template('addproduct.html', vendors=vendors, account_type=account_type)
 
 @app.route('/delete_product/<int:product_id>', methods=['POST'])
 def delete_product(product_id):
+
+    account_type = session.get('account_type')
+
 
     conn.execute(text("Delete From product_images Where ProductID = :product_id"), {'product_id': product_id})
     conn.execute(text("Delete From product_sizes Where ProductID = :product_id"), {'product_id': product_id})
@@ -326,7 +344,10 @@ def delete_product(product_id):
     conn.execute(text("Delete From products Where ProductID = :product_id"), {'product_id': product_id})
     conn.commit()
 
-    return redirect(url_for('vendor_products'))
+    if account_type == 'admin':
+        return redirect(url_for('all_products'))
+    else:
+        return redirect(url_for('vendor_products'))
 
 
         

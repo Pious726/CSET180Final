@@ -3,11 +3,21 @@
 <main>
     <h1>Add a New Product</h1>
     <form method="post">
-        <label>Title: <input type="text" name="title"></label><br>
-        <label>Description: <input type="text" name="description"></label><br>
+        {% if account_type == 'admin' %}
+            <label>Vendor:
+                <select name="vendor_id" required>
+                    {% for vendor in vendors %}
+                        <option value="{{ vendor[0] }}">{{ vendor[1] }}</option>
+                    {% endfor %}
+                </select>
+            </label><br>
+        {% endif %}
+
+        <label>Title: <input type="text" name="title" required></label><br>
+        <label>Description: <input type="text" name="description" required></label><br>
         <label>Warranty: <input type="date" name="warranty"></label><br>
-        <label>Inventory: <input type="number" name="inventory"></label><br>
-        <label>Original Price: <input type="number" step="0.01" name="original_price"></label><br>
+        <label>Inventory: <input type="number" name="inventory" required></label><br>
+        <label>Original Price: <input type="number" step="0.01" name="original_price" required></label><br>
         <label>Discount Price: <input type="number" step="0.01" name="discount_price"></label><br>
 
         <hr>
