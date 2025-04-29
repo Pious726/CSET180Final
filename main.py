@@ -138,7 +138,7 @@ def getcartitems():
     customerID = conn.execute(text('select customerID from users natural join customer where IsLoggedIn = 1')).scalar()
     cartID = conn.execute(text(f'select cartID from cart where customerID = {customerID}')).scalar()
     cartItems = list(conn.execute(text(f'select * from Cart_Items natural join products where cartID = {cartID}')))
-    totalPrice = sum(item[9] * item[2] for item in cartItems)
+    totalPrice = round(sum(item[9] * item[2] for item in cartItems), 2)
     return render_template('cart.html', cartItems=cartItems, totalPrice=totalPrice)
 
 @app.route('/cart.html', methods=['POST'])
