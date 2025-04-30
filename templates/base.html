@@ -25,6 +25,9 @@
                 {% if session.get('account_type') == 'vendor' %}
                 <li><a href="{{ url_for('vendor_products') }}">MY PRODUCTS</a></li>
                 {% endif %}
+                {% if session.get('account_type') == 'admin' %}
+                <li><a href="{{ url_for('all_products') }}">ALL PRODUCTS</a></li>
+                {% endif %}
                 <li><a href="{{ url_for('logout')}}">LOG OUT</a></li>
             </ul>
         </nav>

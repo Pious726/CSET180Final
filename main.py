@@ -175,19 +175,221 @@ def getorders():
     orders = conn.execute(text(f'select * from orders where customerID = {customerID}')).fetchall()
     return render_template('orders.html', orders=orders)
 
+@app.route('/all_products')
+def all_products():
+    
+    user_id = session.get('user_id')
+    account_type = session.get('account_type')
+
+    if not user_id or account_type != 'admin':
+        return redirect(url_for('login'))
+    
+    products = conn.execute(text('select * from products')).fetchall()
+
+    return render_template('all_products.html', products=products)
+
 @app.route('/vendor_products')
 def vendor_products():
-    vendor_id = session.get('user_id')  # Get the vendor's user ID from the session
+    user_id = session.get('user_id') 
 
-    # Query the database to fetch products created by this vendor
+    if not user_id:
+        return redirect(url_for('login'))
+
+    vendor_id = conn.execute(
+        text('SELECT vendorID FROM vendor WHERE userID = :user_id'),
+        {'user_id': user_id}
+    ).scalar()
+
+    if not vendor_id:
+        return "You are not registered as a vendor."
+
     products = conn.execute(
         text('SELECT * FROM products WHERE vendorID = :vendor_id'),
         {'vendor_id': vendor_id}
-    ).fetchall()  # Fetch all products for the current vendor
+    ).fetchall()
 
-    # Render the template and pass the products data
     return render_template('vendorproducts.html', products=products)
 
+@app.route('/edit_product/<int:product_id>', methods=['GET', 'POST'])
+def edit_product(product_id):
+    user_id = session.get('user_id')
+    account_type = session.get('account_type')
+
+    if request.method == 'POST':
+        form = request.form
+
+        conn.execute(text("""
+            update products
+            set Title = :title,
+                Description = :description,
+                Warranty = :warranty,
+                Inventory = :inventory,
+                Original_Price = :original_price,
+                Discount_Price = :discount_price
+            where ProductID = :product_id
+        """), {
+            'title': form.get('title'),
+            'description': form.get('description'),
+            'warranty': form.get('warranty'),
+            'inventory': form.get('inventory'),
+            'original_price': form.get('original_price'),
+            'discount_price': form.get('discount_price'),
+            'product_id': product_id
+        })
+
+        new_size = form.get('new_size')
+        if new_size:
+            conn.execute(text("""
+                insert into product_sizes (ProductID, Sizes)
+                values (:product_id, :size)
+            """), {'product_id': product_id, 'size': new_size})
+
+        new_color = form.get('new_color')
+        if new_color:
+            conn.execute(text("""
+                insert into product_color (ProductID, Color)
+                values (:product_id, :color)
+            """), {'product_id': product_id, 'color': new_color})
+
+      
+        new_image = form.get('new_image')
+        if new_image:
+            conn.execute(text("""
+                insert into product_images (ProductID, Images)
+                values (:product_id, :image)
+            """), {'product_id': product_id, 'image': new_image})
+
+       
+        conn.commit()
+
+        if account_type == 'admin':  
+            return redirect(url_for('all_products'))
+        else:
+            return redirect(url_for('vendor_products'))
+
+    
+    if account_type == 'admin':  
+        product = conn.execute(
+            text("select * from products where ProductID = :product_id"),
+            {'product_id': product_id}
+        ).fetchone()
+    else:
+        vendor_id = conn.execute(
+            text("select vendorID from vendor where userID = :user_id"),
+            {'user_id': user_id}
+        ).scalar()
+
+        product = conn.execute(
+            text("select * from products where ProductID = :product_id and vendorID = :vendor_id"),
+            {'product_id': product_id, 'vendor_id': vendor_id}
+        ).fetchone()
+
+    if not product:
+        return "Product not found", 404
+
+    sizes = conn.execute(
+        text("select Sizes from product_sizes where ProductID = :product_id"),
+        {'product_id': product_id}
+    ).fetchall()
+
+    colors = conn.execute(
+        text("select Color from product_color where ProductID = :product_id"),
+        {'product_id': product_id}
+    ).fetchall()
+
+    images = conn.execute(
+        text("select Images from product_images where ProductID = :product_id"),
+        {'product_id': product_id}
+    ).fetchall()
+
+    return render_template('editproduct.html',
+                           product=product,
+                           sizes=[size[0] for size in sizes],
+                           colors=[color[0] for color in colors],
+                           images=[image[0] for image in images])
+
+
+@app.route('/add_product', methods=['GET', 'POST'])
+def add_product():
+    account_type = session.get('account_type')
+    user_id = session.get('user_id')
+
+    if request.method == 'POST':
+        try:
+            form = request.form
+
+            if account_type == 'admin':
+                vendor_id = form.get('vendor_id')
+            else:
+                
+                vendor_id = conn.execute(
+                    text('SELECT vendorID FROM vendor WHERE userID = :user_id'),
+                    {'user_id': user_id}
+                ).scalar()
+
+            conn.execute(text("""
+                Insert Into products (VendorID, Title, Description, Warranty, Inventory, Original_Price, Discount_Price)
+                Values (:vendor_id, :title, :description, :warranty, :inventory, :original_price, :discount_price)
+            """), {
+                'vendor_id': vendor_id,
+                'title': form.get('title'),
+                'description': form.get('description'),
+                'warranty': form.get('warranty'),
+                'inventory': form.get('inventory'),
+                'original_price': form.get('original_price'),
+                'discount_price': form.get('discount_price')
+            })
+
+            product_id = conn.execute(text("Select Last_Insert_ID()")).scalar()
+
+            if form.get('new_size'):
+                conn.execute(text("Insert Into product_sizes (ProductID, Sizes) Values (:product_id, :size)"),
+                             {'product_id': product_id, 'size': form.get('new_size')})
+
+            if form.get('new_color'):
+                conn.execute(text("Insert Into product_color (ProductID, Color) Values (:product_id, :color)"),
+                             {'product_id': product_id, 'color': form.get('new_color')})
+
+            if form.get('new_image'):
+                conn.execute(text("Insert Into product_images (ProductID, Images) Values (:product_id, :image)"),
+                             {'product_id': product_id, 'image': form.get('new_image')})
+
+            conn.commit()
+
+            if account_type == 'admin':
+                return redirect(url_for('all_products'))
+            else:
+                return redirect(url_for('vendor_products'))
+            
+        except:
+            conn.rollback()
+            return "Something went wrong while adding your product."
+        
+    vendors = []
+    if account_type == 'admin':
+        vendors = conn.execute(text("select VendorID, Name from vendor")).fetchall()
+    return render_template('addproduct.html', vendors=vendors, account_type=account_type)
+
+@app.route('/delete_product/<int:product_id>', methods=['POST'])
+def delete_product(product_id):
+
+    account_type = session.get('account_type')
+
+
+    conn.execute(text("Delete From product_images Where ProductID = :product_id"), {'product_id': product_id})
+    conn.execute(text("Delete From product_sizes Where ProductID = :product_id"), {'product_id': product_id})
+    conn.execute(text("Delete From product_color Where ProductID = :product_id"), {'product_id': product_id})
+
+    conn.execute(text("Delete From products Where ProductID = :product_id"), {'product_id': product_id})
+    conn.commit()
+
+    if account_type == 'admin':
+        return redirect(url_for('all_products'))
+    else:
+        return redirect(url_for('vendor_products'))
+
+
+        
 
 if __name__ == '__main__':
     app.run(debug=True)

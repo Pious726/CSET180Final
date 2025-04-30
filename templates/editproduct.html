@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <h1>Edit Product: {{ product.Title }}</h1>
+
+    <form id="edit_form" method="POST">
+        <!-- Product Info -->
+        <h3>Product Title:</h3>
+        <input type="text" id="title" name="title" value="{{ product.Title }}" required><br><br>
+
+        <h3>Description:</h3>
+        <textarea id="description" name="description" required>{{ product.Description }}</textarea><br><br>
+
+        <h3>Warranty</h3>
+        <input type="text" id="warranty" name="warranty" value="{{ product.Warranty }}" required><br><br>
+
+        <h3>Inventory</h3>
+        <input type="number" id="inventory" name="inventory" value="{{ product.Inventory }}" required><br><br>
+
+        <label for="original_price"><h3>Original Price:</h3></label>
+        <input type="text" id="original_price" name="original_price" value="{{ product.Original_Price }}" required><br><br>
+
+        <label for="discount_price"><h3>Discount Price:</h3></label>
+        <input type="text" id="discount_price" name="discount_price" value="{{ product.Discount_Price }}" required><br><br>
+
+        <!-- Existing Sizes -->
+      
+        <h3>Existing Sizes</h3>
+        <ul class="specification">
+            {% for size in sizes %}
+                <li>{{ size }}</li>
+            {% endfor %}
+        </ul>
+        
+        <label for="new_size">Add New Size:</label>
+        <input type="text" id="new_size" name="new_size"><br><br>
+
+        <!-- Existing Colors -->
+        <h3>Existing Colors</h3>
+        <ul class="specification">
+            {% for color in colors %}
+                <li>{{ color }}</li>
+            {% endfor %}
+        </ul>
+
+        <label for="new_color">Add New Color:</label>
+        <input type="text" id="new_color" name="new_color"><br><br>
+
+        <!-- Existing Images -->
+        <h3>Existing Images</h3>
+        <ul>
+            {% for image in images %}
+                <li><img src="{{ url_for('static', filename=image) }}" alt="{{ image }}" width="100"></li>
+            {% endfor %}
+        </ul>
+
+        <label for="new_image">Add New Image:</label>
+        <input type="text" id="new_image" name="new_image"><br><br>
+
+        <button style="margin-top: 15px;" class="vendor-btn" type="submit">Save Changes</button>
+    </form>
+{% endblock %}
