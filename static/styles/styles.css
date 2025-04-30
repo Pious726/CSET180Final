@@ -454,7 +454,10 @@ section {
     padding: 30px 0;
     margin: 20px auto;
 }
-
+.checkout-container label {
+    font-family: 'MinecraftSeven', sans-serif;
+    font-weight: 100;
+}
 
 /* Styles for accounts page */
 .account-info {
