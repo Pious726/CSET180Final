@@ -512,3 +512,43 @@ input.news-btn {
 .copyright p {
     font-size: 10px;
 }
+
+/* Edit Page styles: */ 
+
+#edit_form {
+    background-color: var(--secondaryColor);
+    margin: 200px;
+    padding: 50px 100px;
+}
+
+form#edit_form {
+    margin: auto;
+    margin-top: 150px;
+    margin-bottom: 150px;
+}
+
+#edit_form input, #edit_form textarea {
+    padding: 5px 10px;
+    font-size: .8em;
+    width: 600px;
+    margin-bottom: -50px;
+    display: block;
+    margin-top: 5px;
+}
+
+#edit_form textarea {
+    resize: vertical;
+    max-height: 300px;
+}
+
+#edit_form li {
+    list-style-type: none;
+}
+
+.specification {
+    display: flex;
+    flex-direction: row;
+    gap: 45px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
