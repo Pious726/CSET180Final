@@ -56,6 +56,29 @@ def login():
                     {"email": email}
                 )
                 conn.commit()
+
+                if user[2] == 'customer':  
+        
+                    customer = conn.execute(
+                        text("SELECT customerID FROM customer WHERE userID = :userID"),
+                        {"userID": user[0]}  
+                    ).fetchone()
+
+                    if customer:
+                        customerID = customer[0] 
+
+                        existing_cart = conn.execute(
+                            text("SELECT cartID FROM cart WHERE customerID = :customerID"),
+                            {"customerID": customerID}
+                        ).fetchone()
+
+                        if not existing_cart:
+                            conn.execute(
+                                text("INSERT INTO cart (customerID) VALUES (:customerID)"),
+                                {"customerID": customerID}
+                            )
+                            conn.commit()
+
                 return redirect(url_for('loadhome'))
             else:
                 return render_template('login.html', error='Incorrect email or password.', success=None)
@@ -63,6 +86,12 @@ def login():
             return render_template('login.html', error='Account not found.', success=None)
 
     return render_template('login.html')
+
+
+
+
+
+
 
 @app.route('/logout')
 def logout():
