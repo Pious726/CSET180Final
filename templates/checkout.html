@@ -1,7 +1,23 @@
 {% extends 'base.html' %}
 {% block body %}
     <main>
-        <h1 class="page-title">Checkout</h1>
-        
+        <h1 class="page-title">Payment Information</h1>
+        <div class="checkout-container">
+            <form action="/checkout.html" method="POST">
+                <label for="cardName">Name on Card:</label>
+                <input type="text" id="cardName" required><br>
+
+                <label for="cardNumber">Card Number:</label>
+                <input type="text" name="cardNumber" id="cardNumber" placeholder="1234-1234-1234-1234" maxlength="19" minlength="16" required><br>
+
+                <label for="expirationDate">Exp. Date:</label>
+                <input type="date" name="expirationDate" id="expirationDate" required><br>
+
+                <label for="CCV">CCV Number:</label>
+                <input type="tel" name="CCV" id="CCV" placeholder="000" maxlength="3" minlength="3" required><br>
+
+                <button type="submit" class="ad-btn">Submit</button>
+            </form>
+        </div>
     </main>
 {% endblock %}
