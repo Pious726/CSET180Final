@@ -175,7 +175,15 @@ def placeorder():
     conn.execute(text(f'delete from Cart_Items where cartID = {cartID}'))
     conn.commit()
 
-    return redirect(url_for('loadshop'))
+    return render_template('thanks.html')
+
+@app.route('/thanks.html')
+def orderthanks():
+    return render_template('thanks.html')
+
+@app.route('/reviews.html')
+def loadreviews():
+    return render_template('reviews.html')
 
 @app.route('/accounts.html', methods=['GET'])
 def getaccount():
