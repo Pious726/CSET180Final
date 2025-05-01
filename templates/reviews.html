@@ -2,5 +2,10 @@
 {% block body %}
     <main>
         <h1 class="page-title">Leave a review!</h1>
+        <div class="review-container container">
+            <form action="/reviews.html" method="POST">
+                <label for=""><input type="text" name=""></label>
+            </form>
+        </div>
     </main>
 {% endblock %}

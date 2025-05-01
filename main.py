@@ -190,6 +190,11 @@ def orderthanks():
 def loadreviews():
     return render_template('reviews.html')
 
+@app.route('/reviews.html', methods=['POST'])
+def craetereview():
+    
+    return render_template('reviews.html')
+
 @app.route('/accounts.html', methods=['GET'])
 def getaccount():
     account = conn.execute(text('select * from users where IsLoggedIn = 1')).fetchone()
