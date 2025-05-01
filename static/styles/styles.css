@@ -606,10 +606,22 @@ form#edit_form {
     list-style-type: none;
 }
 
+#edit_form h3 {
+    color: var(--accentGreen);
+}
+
+#edit_form label {
+    font-family: 'MinecraftSeven';
+    src: url('../Fonts/Minecraft-Seven_v2.ttf') format('truetype');
+    font-weight: 100;
+    font-style: normal;
+}
+
 .specification {
     display: flex;
     flex-direction: row;
     gap: 45px;
     margin-top: 10px;
     margin-bottom: 10px;
+    
 }
