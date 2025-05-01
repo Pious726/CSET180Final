@@ -188,11 +188,13 @@ def orderthanks():
 
 @app.route('/reviews.html')
 def loadreviews():
+    customerID = conn.execute(text('select customerID from users natural join customer where IsLoggedIn = 1;')).scalar()
+    orderID = request.form.get('orderID')
     return render_template('reviews.html')
 
 @app.route('/reviews.html', methods=['POST'])
-def craetereview():
-    
+def createreview():
+
     return render_template('reviews.html')
 
 @app.route('/accounts.html', methods=['GET'])

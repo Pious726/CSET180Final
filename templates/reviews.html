@@ -4,7 +4,14 @@
         <h1 class="page-title">Leave a review!</h1>
         <div class="review-container container">
             <form action="/reviews.html" method="POST">
-                <label for=""><input type="text" name=""></label>
+                <label for="itemName">Item: <input list="itemName" name="itemName"></label>
+                <datalist id="itemName">
+                    {% for item in orderItems %}
+                        <option value="{{item.name}}">{{item.name}}</option>
+                    {% endfor %}
+                </datalist><br>
+                <label for="rating">Rating: <input type="number" name="rating" min="1" max="5" value="1" onkeydown="return false"></label><br>
+                <label for="review-text">Review: </label><br><textarea></textarea>
             </form>
         </div>
     </main>
