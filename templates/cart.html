@@ -35,10 +35,11 @@
                 <form method="POST">
                     <a href="checkout.html"><button type="button" class="ad-btn">Order!</button></a>
                 </form>
-            {% endif %}
-            {% if cartItems == None %}
-                <p>You currently have no items in your cart!</p>
-                <a href="shop.html"><button type="button" class="ad-btn">Shop Here!</button></a>
+            {% else %}
+                <div style="text-align: center;">
+                    <p style="margin-bottom: 15px;">You currently have no items in your cart!</p>
+                    <a href="shop.html"><button type="button" class="ad-btn">Shop Here!</button></a>
+                </div>
             {% endif %}
         </div>
     </main>

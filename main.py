@@ -193,6 +193,27 @@ def update_quantity():
 def loadcheckout():
     return render_template('checkout.html')
 
+@app.route('/checkout.html', methods=['POST'])
+def placeorder():
+    customerID = conn.execute(text('select customerID from users natural join customer where IsLoggedIn = 1;')).scalar()
+    cartID = conn.execute(text(f'select cartID from cart where customerID = {customerID}')).scalar()
+    cartItems = list(conn.execute(text(f'select * from Cart_Items natural join products where cartID = {cartID}')))
+    totalPrice = round(sum(item[9] * item[2] for item in cartItems), 2)
+
+    conn.execute(text(f'insert into orders (customerID, OrderDate, TotalPrice, OrderStatus) values ({customerID}, CURDATE(),{totalPrice}, "Pending")'))
+    conn.execute(text(f'delete from Cart_Items where cartID = {cartID}'))
+    conn.commit()
+
+    return render_template('thanks.html')
+
+@app.route('/thanks.html')
+def orderthanks():
+    return render_template('thanks.html')
+
+@app.route('/reviews.html')
+def loadreviews():
+    return render_template('reviews.html')
+
 @app.route('/accounts.html', methods=['GET'])
 def getaccount():
     account = conn.execute(text('select * from users where IsLoggedIn = 1')).fetchone()
@@ -337,7 +358,6 @@ def edit_product(product_id):
                            colors=[color[0] for color in colors],
                            images=[image[0] for image in images])
 
-
 @app.route('/add_product', methods=['GET', 'POST'])
 def add_product():
     account_type = session.get('account_type')
@@ -417,8 +437,6 @@ def delete_product(product_id):
     else:
         return redirect(url_for('vendor_products'))
 
-
-        
 
 if __name__ == '__main__':
     app.run(debug=True)

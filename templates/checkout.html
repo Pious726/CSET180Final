@@ -4,17 +4,13 @@
         <h1 class="page-title">Payment Information</h1>
         <div class="checkout-container">
             <form action="/checkout.html" method="POST">
-                <label for="cardName">Name on Card:</label>
-                <input type="text" id="cardName" required><br>
+                <label for="cardName">Name on Card: <input type="text" id="cardName" placeholder="Minecraft Steve" required></label><br>
 
-                <label for="cardNumber">Card Number:</label>
-                <input type="text" name="cardNumber" id="cardNumber" placeholder="1234-1234-1234-1234" maxlength="19" minlength="16" required><br>
+                <label for="cardNumber">Card Number: <input type="text" name="cardNumber" id="cardNumber" placeholder="1234-1234-1234-1234" maxlength="19" minlength="16" required></label><br>
 
-                <label for="expirationDate">Exp. Date:</label>
-                <input type="date" name="expirationDate" id="expirationDate" required><br>
+                <label for="expirationDate">Exp. Date: <input type="date" name="expirationDate" id="expirationDate" required></label><br>
 
-                <label for="CCV">CCV Number:</label>
-                <input type="tel" name="CCV" id="CCV" placeholder="000" maxlength="3" minlength="3" required><br>
+                <label for="CCV">CCV Number: <input type="tel" name="CCV" id="CCV" placeholder="123" maxlength="3" minlength="3" required></label><br>
 
                 <button type="submit" class="ad-btn">Submit</button>
             </form>
