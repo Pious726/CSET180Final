@@ -201,10 +201,15 @@ def placeorder():
     totalPrice = round(sum(item[9] * item[2] for item in cartItems), 2)
 
     conn.execute(text(f'insert into orders (customerID, OrderDate, TotalPrice, OrderStatus) values ({customerID}, CURDATE(),{totalPrice}, "Pending")'))
+    orderID = conn.execute(text('select LAST_INSERT_ID()')).scalar()
+
+    for item in cartItems:
+        conn.execute(text(f'insert into OrderItems (orderID, productID, Quantity) values ({orderID}, {item.productID}, {item.Quantity})'))
+
     conn.execute(text(f'delete from Cart_Items where cartID = {cartID}'))
     conn.commit()
 
-    return render_template('thanks.html')
+    return redirect(url_for('orderthanks'))
 
 @app.route('/thanks.html')
 def orderthanks():
@@ -212,6 +217,13 @@ def orderthanks():
 
 @app.route('/reviews.html')
 def loadreviews():
+    customerID = conn.execute(text('select customerID from users natural join customer where IsLoggedIn = 1;')).scalar()
+    orderID = request.form.get('orderID')
+    return render_template('reviews.html')
+
+@app.route('/reviews.html', methods=['POST'])
+def createreview():
+
     return render_template('reviews.html')
 
 @app.route('/accounts.html', methods=['GET'])
