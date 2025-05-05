@@ -495,8 +495,9 @@ section {
     border-left: 4px solid #3f3f3f;
     border-right: 4px solid #272624;
     color: var(--textColor);
-    padding: 8px;
+    padding: 10px;
     margin: 10px;
+    font-size: 16px;
     font-family: 'MinecraftSeven', sans-serif;
     font-weight: 100;
 }

@@ -188,12 +188,32 @@ def orderthanks():
 
 @app.route('/reviews.html')
 def loadreviews():
-    customerID = conn.execute(text('select customerID from users natural join customer where IsLoggedIn = 1;')).scalar()
-    orderID = request.form.get('orderID')
-    return render_template('reviews.html')
+    orderID = session.get('orderID')
+    orderItems = conn.execute(text(f'select * from OrderItems natural join products where orderID = {orderID}'))
+    return render_template('reviews.html', orderItems=orderItems)
 
 @app.route('/reviews.html', methods=['POST'])
 def createreview():
+    itemName = request.form.get('itemName')
+    rating = request.form.get('rating')
+    itemImage = request.form.get('itemImage')
+    ratingDesc = request.form.get('desc')
+    customerID = conn.execute(text('select customerID from users natural join customer where IsLoggedIn = 1;')).scalar()
+    productID = conn.execute(text(f'select productID from products where Title = :title'), {"title": itemName}).scalar()
+    print(request.form)
+    conn.execute(text('''
+        insert into reviews 
+        (customerID, productID, itemName, Rating, Description, Image, Date) 
+        values (:customerID, :productID, :itemName, :Rating, :Description, :Image, CURDATE())
+    '''), {
+        'customerID': customerID,
+        'productID': productID,
+        'itemName': itemName,
+        'Rating': rating,
+        'Description': ratingDesc,
+        'Image': itemImage
+    })
+    conn.commit()
 
     return render_template('reviews.html')
 
@@ -207,6 +227,11 @@ def getorders():
     customerID = conn.execute(text('select customerID from customer natural join users where IsLoggedIn = 1')).scalar()
     orders = conn.execute(text(f'select * from orders where customerID = {customerID}')).fetchall()
     return render_template('orders.html', orders=orders)
+
+@app.route('/orders.html/reviews', methods=['POST'])
+def toreviews():
+    session['orderID'] = request.form.get('orderID')
+    return redirect(url_for('loadreviews'))
 
 @app.route('/all_products')
 def all_products():

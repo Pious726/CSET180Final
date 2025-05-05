@@ -10,6 +10,10 @@
                     <p>Total Price: ${{order[3]}}</p>
                     <p>Shipping Status: {{order[4]}}</p>
                     <button class="ad-btn">Issue a return?</button>
+                    <form action="/orders.html/reviews" method="POST">
+                        <input type="hidden" name="orderID" value="{{order[0]}}">
+                        <a href='reviews.html'><button class="ad-btn">Leave a review?</button></a>
+                    </form>
                 </div>
             {% endfor %}
         </div>
