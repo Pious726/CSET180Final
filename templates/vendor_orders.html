@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<main>
+    <h1 class="page-title">Order Information</h1>
+    <div class="order-info">
+        {% if orders %}
+            {% for order in orders %}
+                <div class="order-card">
+                    <p>Order ID: {{ order[0] }}</p>
+                    <p>Date of Order: {{ order[2] }}</p>
+                    <p>Total Price: ${{ order[3] }}</p>
+                    <p>Shipping Status: {{ order[4] }}</p>
+                    <a href="{{ url_for('returns') }}">
+                        <button class="ad-btn">Issue a return?</button>
+                    </a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No orders available for your products.</p>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

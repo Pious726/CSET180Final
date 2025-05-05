@@ -436,6 +436,50 @@ def delete_product(product_id):
         return redirect(url_for('all_products'))
     else:
         return redirect(url_for('vendor_products'))
+    
+@app.route('/vendor_orders')
+def vendor_orders():
+    user_id = session.get('user_id')  # Retrieve user_id from session
+
+    # Redirect to login if no user_id is found in the session
+    if not user_id:
+        return redirect(url_for('login'))
+
+    # Query to retrieve vendor_id for the logged-in user
+    vendor_id = conn.execute(
+        text('SELECT vendorID FROM vendor WHERE userID = :user_id'),
+        {'user_id': user_id}
+    ).scalar()
+
+    # Check if vendor_id is found, return an error message if not
+    if not vendor_id:
+        return "You are not registered as a vendor."
+
+    # Debugging: print the user_id and vendor_id to check their values
+    print(f"User ID: {user_id}, Vendor ID: {vendor_id}")
+
+    # Query to retrieve orders for the vendor's products
+    orders = conn.execute(text("""
+    select distinct orders.orderID, orders.customerID, orders.orderDate, orders.totalPrice, orders.orderStatus
+    from orders
+    join orderitems on orders.orderID = orderitems.orderID
+    join products on orderitems.productID = products.productID
+    where products.vendorID = :vendor_id
+    order by orders.orderDate desc;
+"""), {'vendor_id': vendor_id}).fetchall()
+
+
+    # Debugging: print the orders data to check what is returned from the query
+    print(orders)
+
+    # Render the vendor_orders.html template with the orders data
+    return render_template('vendor_orders.html', orders=orders)
+
+
+    
+@app.route('/returns', methods=['POST'])
+def returns():
+    return render_template('returns.html')
 
 
 if __name__ == '__main__':
