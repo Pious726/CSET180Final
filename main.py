@@ -118,7 +118,9 @@ def saveiteminfo():
 
 @app.route('/item.html')
 def loaditem():
-    return render_template('item.html')
+    itemID = session.get('itemID')
+    reviewList = conn.execute(text(f'select * from reviews natural join customer natural join users where productID = {itemID}')).fetchall()
+    return render_template('item.html', reviewList=reviewList)
 
 @app.route('/item.html', methods=['POST'])
 def addtocart():
@@ -198,17 +200,19 @@ def createreview():
     rating = request.form.get('rating')
     itemImage = request.form.get('itemImage')
     ratingDesc = request.form.get('desc')
+    ratingTitle = request.form.get('ratingTitle')
     customerID = conn.execute(text('select customerID from users natural join customer where IsLoggedIn = 1;')).scalar()
     productID = conn.execute(text(f'select productID from products where Title = :title'), {"title": itemName}).scalar()
     print(request.form)
     conn.execute(text('''
         insert into reviews 
-        (customerID, productID, itemName, Rating, Description, Image, Date) 
-        values (:customerID, :productID, :itemName, :Rating, :Description, :Image, CURDATE())
+        (customerID, productID, itemName, ratingTitle, Rating, Description, Image, Date) 
+        values (:customerID, :productID, :itemName, :ratingTitle, :Rating, :Description, :Image, CURDATE())
     '''), {
         'customerID': customerID,
         'productID': productID,
         'itemName': itemName,
+        'ratingTitle': ratingTitle,
         'Rating': rating,
         'Description': ratingDesc,
         'Image': itemImage

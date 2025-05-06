@@ -402,6 +402,48 @@ section {
     text-align: center;
     margin: 20px 0;
 }
+.product-reviews {
+    margin: 20px auto 40px auto;
+}
+.no-reviews {
+    text-align: center;
+    margin: 10px;
+}
+.review-info {
+    background-color: var(--secondaryColor);
+    border-top: 10px solid #3f3f3f;
+    border-bottom: 10px solid #272624;
+    border-left: 10px solid #3f3f3f;
+    border-right: 10px solid #272624;
+    padding: 20px;
+    width: 75%;
+    margin: 20px auto;
+}
+.review-info h2 {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+.review-info p {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+.review-info .flex {
+    align-items: start;
+    justify-content: center;
+    gap: 20px;
+}
+.review-info .flex img {
+    width: 50%;
+}
+.review-info .flex p {
+    font-size: 20px;
+    width: 50%;
+}
+.rating-star {
+    width: 50px;
+    height: 50px;
+}
+
 
 /* Styles for cart */
 .cart {
