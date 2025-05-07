@@ -405,6 +405,10 @@ section {
 .product-reviews {
     margin: 20px auto 40px auto;
 }
+.product-reviews form {
+    text-align: center;
+    margin-top: 20px;
+}
 .no-reviews {
     text-align: center;
     margin: 10px;
@@ -417,7 +421,7 @@ section {
     border-right: 10px solid #272624;
     padding: 20px;
     width: 75%;
-    margin: 20px auto;
+    margin: 10px auto 20px auto;
 }
 .review-info h2 {
     font-size: 40px;

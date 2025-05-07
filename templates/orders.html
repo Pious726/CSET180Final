@@ -3,19 +3,26 @@
     <main>
         <h1 class="page-title">Order Informƒtion</h1>
         <div class="order-info">
-            {% for order in orders%}
-                <div class="order-card">
-                    <p>Order ID: {{order[0]}}</p>
-                    <p>Date of Order: {{order[2]}}</p>
-                    <p>Total Price: ${{order[3]}}</p>
-                    <p>Shipping Status: {{order[4]}}</p>
-                    <button class="ad-btn">Issue a return?</button>
-                    <form action="/orders.html/reviews" method="POST">
-                        <input type="hidden" name="orderID" value="{{order[0]}}">
-                        <a href='reviews.html'><button class="ad-btn">Leave a review?</button></a>
-                    </form>
+            {% if orders %}
+                {% for order in orders%}
+                    <div class="order-card">
+                        <p>Order ID: {{order[0]}}</p>
+                        <p>Date of Order: {{order[2]}}</p>
+                        <p>Total Price: ${{order[3]}}</p>
+                        <p>Shipping Status: {{order[4]}}</p>
+                        <button class="ad-btn">Issue a return?</button>
+                        <form action="/orders.html/reviews" method="POST">
+                            <input type="hidden" name="orderID" value="{{order[0]}}">
+                            <a href='reviews.html'><button class="ad-btn">Leave a review?</button></a>
+                        </form>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div style="text-align: center;">
+                    <p>It seems you haven't made any orders yet!</p>
+                    <a href="shop.html"><button type="button" class="ad-btn">Shop Here!</button></a>
                 </div>
-            {% endfor %}
+            {% endif %}
         </div>
     </main>
 {% endblock %}

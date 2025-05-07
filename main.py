@@ -119,7 +119,26 @@ def saveiteminfo():
 @app.route('/item.html')
 def loaditem():
     itemID = session.get('itemID')
-    reviewList = conn.execute(text(f'select * from reviews natural join customer natural join users where productID = {itemID}')).fetchall()
+    query = f"select * from reviews natural join customer natural join users where productID = {itemID}"
+    filterRating = request.args.get('filterRating')
+    sortBy = request.args.get('sortBy')
+
+    if filterRating:
+        query += f" and Rating = {filterRating}"
+
+    if sortBy == "date_desc":
+        query += " order by Date desc"
+    elif sortBy == "date_asc":
+        query += " order by Date asc"
+    elif sortBy == "rating_desc":
+        query += " order by Rating desc"
+    elif sortBy == "rating_asc":
+        query += " order by Rating asc"
+    else:
+        query += " order by Date desc"
+
+    reviewList = conn.execute(text(query))
+
     return render_template('item.html', reviewList=reviewList)
 
 @app.route('/item.html', methods=['POST'])
