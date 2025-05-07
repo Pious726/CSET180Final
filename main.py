@@ -82,30 +82,31 @@ def loadshop():
     sizes = request.args.getlist('size')
     availability = request.args.getlist('availability')
 
-    query = '''select * from products natural join Product_Images'''
-    params={}
+    query = 'select * from products natural join Product_Images'
 
     if categories:
-        query += " and Category in :categories"
-        params['categories'] = tuple(categories)
+        query += f" and Category in {categories}"
+
     if colors:
-        query += " and Color in :colors"
-        params['colors'] = tuple(colors)
+        query += f" and Color in {colors}"
+
     if sizes:
-        query += " and Sizes in :sizes"
-        params['sizes'] = tuple(sizes)
+        query += f" and Sizes in {sizes}"
+
     if availability:
         if "In Stock" in availability and "Out of Stock" not in availability:
             query += " and stock > 0"
         elif "Out of Stock" in availability and "In Stock" not in availability:
             query += " and stock <= 0"
 
-    products = conn.execute(text(query), params).fetchall()
+    products = list(conn.execute(text(query)))
+
+    product_categories = [row[0] for row in conn.execute(text('select distinct Category from Product_Categories')).fetchall()]
 
     product_sizes = [row[0] for row in conn.execute(text('select distinct Sizes from Product_Sizes')).fetchall()]
     product_colors = [row[0] for row in conn.execute(text('select distinct Color from Product_Color')).fetchall()]
 
-    return render_template('shop.html', products=products, product_sizes=product_sizes, product_colors=product_colors)
+    return render_template('shop.html', products=products, product_sizes=product_sizes, product_colors=product_colors, product_categories=product_categories)
 
 @app.route('/shop.html', methods=['POST'])
 def saveiteminfo():
@@ -137,7 +138,7 @@ def loaditem():
     else:
         query += " order by Date desc"
 
-    reviewList = conn.execute(text(query))
+    reviewList = list(conn.execute(text(query)))
 
     return render_template('item.html', reviewList=reviewList)
 
