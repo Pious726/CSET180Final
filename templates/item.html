@@ -55,5 +55,44 @@
                 </form>
             </div>
         </div>
+        <div class="product-reviews container">
+            <h1>Product Reviews</h1>
+            {% if reviewList %}
+                <form action="/item.html" method="GET">
+                    <select name="filterRating" id="filterRating">
+                        <option value="">All</option>
+                        <option value="5">5 Stars</option>
+                        <option value="4">4 Stars</option>
+                        <option value="3">3 Stars</option>
+                        <option value="2">2 Stars</option>
+                        <option value="1">1 Stars</option>
+                    </select>
+
+                    <select name="sortBy" id="sortBy">
+                        <option value="date_desc">Date (Newest)</option>
+                        <option value="date_asc">Date (Oldest)</option>
+                        <option value="rating_desc">Rating (Highest)</option>
+                        <option value="rating_asc">Rating (Lowest)</option>
+                    </select>
+
+                    <button type="submit" class="ad-btn">Apply</button>
+                </form>
+                {% for review in reviewList %}
+                    <div class="review-info">
+                        <h2>{{review.ratingTitle}}</h2>
+                        <p>By: {{review.name}}</p><p>Made: {{review.Date}}</p>
+                        {% for i in range (review.Rating)%}
+                            <img src="../static/images/nether-star.gif" alt="rating-star" class="rating-star">
+                        {% endfor %}
+                        <div class="flex">
+                            <img src="{{review.Image}}" alt="review image">
+                            <p>{{review.Description}}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="no-reviews">It seems like there are no reviews for this product.</p>
+            {% endif %}
+        </div>
     </main>
 {% endblock %}

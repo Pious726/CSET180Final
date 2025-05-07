@@ -112,30 +112,31 @@ def loadshop():
     sizes = request.args.getlist('size')
     availability = request.args.getlist('availability')
 
-    query = '''select * from products natural join Product_Images'''
-    params={}
+    query = 'select * from products natural join Product_Images'
 
     if categories:
-        query += " and Category in :categories"
-        params['categories'] = tuple(categories)
+        query += f" and Category in {categories}"
+
     if colors:
-        query += " and Color in :colors"
-        params['colors'] = tuple(colors)
+        query += f" and Color in {colors}"
+
     if sizes:
-        query += " and Sizes in :sizes"
-        params['sizes'] = tuple(sizes)
+        query += f" and Sizes in {sizes}"
+
     if availability:
         if "In Stock" in availability and "Out of Stock" not in availability:
             query += " and stock > 0"
         elif "Out of Stock" in availability and "In Stock" not in availability:
             query += " and stock <= 0"
 
-    products = conn.execute(text(query), params).fetchall()
+    products = list(conn.execute(text(query)))
+
+    product_categories = [row[0] for row in conn.execute(text('select distinct Category from Product_Categories')).fetchall()]
 
     product_sizes = [row[0] for row in conn.execute(text('select distinct Sizes from Product_Sizes')).fetchall()]
     product_colors = [row[0] for row in conn.execute(text('select distinct Color from Product_Color')).fetchall()]
 
-    return render_template('shop.html', products=products, product_sizes=product_sizes, product_colors=product_colors)
+    return render_template('shop.html', products=products, product_sizes=product_sizes, product_colors=product_colors, product_categories=product_categories)
 
 @app.route('/shop.html', methods=['POST'])
 def saveiteminfo():
@@ -148,7 +149,28 @@ def saveiteminfo():
 
 @app.route('/item.html')
 def loaditem():
-    return render_template('item.html')
+    itemID = session.get('itemID')
+    query = f"select * from reviews natural join customer natural join users where productID = {itemID}"
+    filterRating = request.args.get('filterRating')
+    sortBy = request.args.get('sortBy')
+
+    if filterRating:
+        query += f" and Rating = {filterRating}"
+
+    if sortBy == "date_desc":
+        query += " order by Date desc"
+    elif sortBy == "date_asc":
+        query += " order by Date asc"
+    elif sortBy == "rating_desc":
+        query += " order by Rating desc"
+    elif sortBy == "rating_asc":
+        query += " order by Rating asc"
+    else:
+        query += " order by Date desc"
+
+    reviewList = list(conn.execute(text(query)))
+
+    return render_template('item.html', reviewList=reviewList)
 
 @app.route('/item.html', methods=['POST'])
 def addtocart():
@@ -218,12 +240,34 @@ def orderthanks():
 
 @app.route('/reviews.html')
 def loadreviews():
-    customerID = conn.execute(text('select customerID from users natural join customer where IsLoggedIn = 1;')).scalar()
-    orderID = request.form.get('orderID')
-    return render_template('reviews.html')
+    orderID = session.get('orderID')
+    orderItems = conn.execute(text(f'select * from OrderItems natural join products where orderID = {orderID}'))
+    return render_template('reviews.html', orderItems=orderItems)
 
 @app.route('/reviews.html', methods=['POST'])
 def createreview():
+    itemName = request.form.get('itemName')
+    rating = request.form.get('rating')
+    itemImage = request.form.get('itemImage')
+    ratingDesc = request.form.get('desc')
+    ratingTitle = request.form.get('ratingTitle')
+    customerID = conn.execute(text('select customerID from users natural join customer where IsLoggedIn = 1;')).scalar()
+    productID = conn.execute(text(f'select productID from products where Title = :title'), {"title": itemName}).scalar()
+    print(request.form)
+    conn.execute(text('''
+        insert into reviews 
+        (customerID, productID, itemName, ratingTitle, Rating, Description, Image, Date) 
+        values (:customerID, :productID, :itemName, :ratingTitle, :Rating, :Description, :Image, CURDATE())
+    '''), {
+        'customerID': customerID,
+        'productID': productID,
+        'itemName': itemName,
+        'ratingTitle': ratingTitle,
+        'Rating': rating,
+        'Description': ratingDesc,
+        'Image': itemImage
+    })
+    conn.commit()
 
     return render_template('reviews.html')
 
@@ -282,8 +326,10 @@ def getorders():
 
     return render_template('orders.html', orders=orders)
 
-
-
+@app.route('/orders.html/reviews', methods=['POST'])
+def toreviews():
+    session['orderID'] = request.form.get('orderID')
+    return redirect(url_for('loadreviews'))
 
 @app.route('/all_products')
 def all_products():
