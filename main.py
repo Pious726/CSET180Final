@@ -88,12 +88,6 @@ def login():
 
     return render_template('login.html')
 
-
-
-
-
-
-
 @app.route('/logout')
 def logout():
     conn.execute(text('Update users Set IsLoggedIn = 0 Where IsLoggedIn = 1'))
@@ -102,6 +96,7 @@ def logout():
 
 @app.route('/home.html')
 def loadhome():
+
     products = conn.execute(text('select * from products natural join Product_Images')).fetchall()
     return render_template('home.html', products=products)
 
@@ -253,7 +248,6 @@ def createreview():
     ratingTitle = request.form.get('ratingTitle')
     customerID = conn.execute(text('select customerID from users natural join customer where IsLoggedIn = 1;')).scalar()
     productID = conn.execute(text(f'select productID from products where Title = :title'), {"title": itemName}).scalar()
-    print(request.form)
     conn.execute(text('''
         insert into reviews 
         (customerID, productID, itemName, ratingTitle, Rating, Description, Image, Date) 
@@ -580,8 +574,6 @@ def vendor_orders():
 
     # Render the vendor_orders.html template with the orders data
     return render_template('vendor_orders.html', orders=orders)
-
-
     
 @app.route('/returns', methods=['POST'])
 def returns():
@@ -590,7 +582,6 @@ def returns():
 @app.route('/file_complaint/<int:product_id>/<int:order_id>', methods=['GET'])
 def show_complaint_form(product_id, order_id):
     return render_template('file_complaints.html', product_id=product_id, order_id=order_id)
-
 
 @app.route('/file_complaint/<int:product_id>/<int:order_id>', methods=['POST'])
 def file_complaint(product_id, order_id):
@@ -644,9 +635,6 @@ def file_complaint(product_id, order_id):
 
     return redirect(url_for('getorders'))
 
-
-
-
 @app.route('/admin_returns.html', methods=['GET'])
 def admin_returns():
     pending_returns = conn.execute(text("""
@@ -680,8 +668,6 @@ def admin_returns():
 
     return render_template('admin_returns.html', returns=returns_with_images)
 
-
-
 @app.route('/update_return_status', methods=['POST'])
 def update_return_status():
     complaint_id = request.form['complaintID']
@@ -712,9 +698,6 @@ def update_return_status():
             """), {'orderID': order_id, 'productID': product_id})
 
     return redirect(url_for('admin_returns'))
-
-
-
 
 
 if __name__ == '__main__':
