@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/styles/styles.css">
+    <link rel="stylesheet" href="/static/styles/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="icon" href="../static/images/grass-block-favicon.webp" type="image/webp">
@@ -12,7 +12,7 @@
 </head>
 <body>
 <div class="top">
-        <a href="home.html"><img class="baselogo" src="../static/Images/minecraftlogo.svg" alt="logo"></a>
+        <a href="home.html"><img class="baselogo" src="/static/Images/minecraftlogo.svg" alt="logo"></a>
 </div>
     <header>
         <nav class="navbar">
@@ -27,6 +27,9 @@
                 {% endif %}
                 {% if session.get('account_type') == 'admin' %}
                 <li><a href="{{ url_for('all_products') }}">ALL PRODUCTS</a></li>
+                {% endif %}
+                {% if session.get('account_type') == 'admin' %}
+                <li><a href="{{ url_for('admin_returns') }}">VIEW RETURNS</a></li>
                 {% endif %}
                 {% if session.get('account_type') == 'vendor' %}
                 <li><a href="{{ url_for('vendor_orders')}}">YOUR ORDERS</a></li>

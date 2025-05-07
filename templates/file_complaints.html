@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <main>
+        <h1 class="page-title">File a Complaint</h1>
+        <div class="complaint-form">
+
+            <form action="{{ url_for('file_complaint', product_id=product_id, order_id=order_id) }}" method="post">
+
+                <label for="title">Title:</label>
+                <input type="text" name="title" required><br>
+            
+                <label for="description">Description:</label>
+                <textarea name="description" required></textarea><br>
+            
+                <label for="demand">Demand:</label>
+                <input type="text" name="demand" required><br>
+
+                <label for="return_type">Return Type:</label>
+                    <select name="return_type" required>
+                        <option value="return">Return</option>
+                        <option value="refund">Refund</option>
+                        <option value="warranty">Warranty</option>
+                    </select><br>
+            
+                <label for="image_urls">Image URLs (comma separated):</label>
+                <input type="text" name="image_urls"><br>
+            
+                <button type="submit">Submit Return</button>
+            </form>
+            
+        </div>
+    </main>
+{% endblock %}

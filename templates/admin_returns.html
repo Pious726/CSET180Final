@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<main>
+    <h1 class="page-title">Pending Returns</h1>
+    <div class="returns-info">
+        {% for complaint in returns %}
+            <div class="return-card">
+                <p>Complaint Title: {{ complaint['Title'] }}</p>
+                <p>Customer: {{ complaint['username'] }}</p>
+                <p>Product: {{ complaint['title'] }}</p>
+                <p>Demand: {{ complaint['Demand'] }}</p>
+                <p>Status: {{ complaint['Status'] }}</p>
+                <p>Description: {{ complaint['Description'] }}</p>
+                <p>Date: {{ complaint['Date'] }}</p>
+
+                {% if complaint['Images'] %}
+                    <h5>Complaint Images:</h5>
+                    <img src="{{ url_for('static', filename='complaint_images/' + complaint['Images']) }}" alt="Complaint Image" style="max-width: 300px;">
+                {% else %}
+                    <p>No images provided</p>
+                {% endif %}
+
+                <!-- Action buttons to confirm/reject the return -->
+                <form method="POST" action="{{ url_for('update_return_status') }}">
+                    <input type="hidden" name="complaintID" value="{{ complaint['complaintID'] }}">
+                    <button type="submit" name="action" value="confirm">Confirm</button>
+                    <button type="submit" name="action" value="reject">Reject</button>
+                </form>
+            </div>
+        {% endfor %}
+    </div>
+</main>
+{% endblock %}

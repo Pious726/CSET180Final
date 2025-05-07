@@ -1,3 +1,4 @@
+from datetime import date
 from flask import Flask, render_template, request, session, url_for, redirect
 from sqlalchemy import create_engine, text
 import bcrypt
@@ -234,8 +235,55 @@ def getaccount():
 @app.route('/orders.html', methods=['GET'])
 def getorders():
     customerID = conn.execute(text('select customerID from customer natural join users where IsLoggedIn = 1')).scalar()
-    orders = conn.execute(text(f'select * from orders where customerID = {customerID}')).fetchall()
+
+    # Updated query with complaint status for specific orderID and productID
+    raw_orders = conn.execute(text("""
+        select orders.orderID, orders.orderDate, orders.totalPrice, orders.orderStatus, 
+               orderitems.productID, products.title, orderitems.quantity,
+               complaint.status
+        from orders
+        join orderitems on orders.orderID = orderitems.orderID
+        join products on orderitems.productID = products.productID
+        left join complaint on orders.orderID = complaint.orderID 
+            and orderitems.productID = complaint.productID
+        where orders.customerID = :customerID
+        order by orders.orderDate desc
+    """), {'customerID': customerID}).fetchall()
+
+    orders = []
+    for row in raw_orders:
+        existing_order = next((order for order in orders if order['orderID'] == row[0]), None)
+        product_data = {
+            'productID': row[4],
+            'title': row[5],
+            'quantity': row[6]
+        }
+
+        # Add complaint status if it exists for the specific product and order
+        if row[7]:
+            product_data['status'] = row[7]
+
+        if existing_order:
+            # If product has a complaint status, append to returns; otherwise, to products
+            if 'status' in product_data:
+                existing_order['returns'].append(product_data)
+            else:
+                existing_order['products'].append(product_data)
+        else:
+            # If it's a new order, create a new entry
+            orders.append({
+                'orderID': row[0],
+                'orderDate': row[1],
+                'totalPrice': row[2],
+                'orderStatus': row[3],
+                'products': [] if 'status' in product_data else [product_data],
+                'returns': [product_data] if 'status' in product_data else []
+            })
+
     return render_template('orders.html', orders=orders)
+
+
+
 
 @app.route('/all_products')
 def all_products():
@@ -492,6 +540,135 @@ def vendor_orders():
 @app.route('/returns', methods=['POST'])
 def returns():
     return render_template('returns.html')
+
+@app.route('/file_complaint/<int:product_id>/<int:order_id>', methods=['GET'])
+def show_complaint_form(product_id, order_id):
+    return render_template('file_complaints.html', product_id=product_id, order_id=order_id)
+
+
+@app.route('/file_complaint/<int:product_id>/<int:order_id>', methods=['POST'])
+def file_complaint(product_id, order_id):
+    customer_id = conn.execute(text('select customerID from customer natural join users where IsLoggedIn = 1')).scalar()
+
+    title = request.form['title']
+    description = request.form['description']
+    demand = request.form['demand']
+    image_urls = request.form['image_urls']
+
+    today = date.today()
+
+    # Insert complaint into complaint table
+    conn.execute(text(""" 
+        insert into complaint (customerID, productID, orderID, Date, Title, Description, Demand, Status) 
+        values (:customerID, :productID, :orderID, :date, :title, :description, :demand, 'pending') 
+    """), {
+        'customerID': customer_id,
+        'productID': product_id,
+        'orderID': order_id,
+        'date': today,
+        'title': title,
+        'description': description,
+        'demand': demand
+    })
+
+    # Get the complaintID of the newly inserted complaint
+    complaint_id = conn.execute(text(""" 
+        select complaintID from complaint 
+        where customerID = :customerID and productID = :productID and orderID = :orderID and Date = :date 
+        order by complaintID desc limit 1 
+    """), {
+        'customerID': customer_id,
+        'productID': product_id,
+        'orderID': order_id,
+        'date': today
+    }).scalar() 
+
+    # Process and save image URLs if provided
+    if image_urls:
+        urls = [url.strip() for url in image_urls.split(',') if url.strip()]
+        for url in urls:
+            conn.execute(text(""" 
+                insert into complaint_images (complaintID, Images) values (:complaintID, :url) 
+            """), {
+                'complaintID': complaint_id,
+                'url': url
+            })
+
+    conn.commit()  # Commit the transaction to the database
+
+    return redirect(url_for('getorders'))
+
+
+
+
+@app.route('/admin_returns.html', methods=['GET'])
+def admin_returns():
+    pending_returns = conn.execute(text("""
+        select complaint.complaintID, complaint.Date, complaint.Title, complaint.Description, 
+               complaint.Demand, complaint.Status, users.username, products.title as product_title
+        from complaint
+        join customer on complaint.customerID = customer.customerID
+        join users on customer.userID = users.userID
+        join products on complaint.productID = products.productID
+        where complaint.Status = 'pending'
+    """)).fetchall()
+
+    returns_with_images = []
+    for row in pending_returns:
+        images = conn.execute(text("""
+            select Images from complaint_images where complaintID = :complaintID
+        """), {'complaintID': row[0]}).fetchall()
+
+        image_urls = [img[0] for img in images]
+        returns_with_images.append({
+            'complaintID': row[0],
+            'Date': row[1],
+            'Title': row[2],
+            'Description': row[3],
+            'Demand': row[4],
+            'Status': row[5],
+            'username': row[6],
+            'product_title': row[7],
+            'images': image_urls
+        })
+
+    return render_template('admin_returns.html', returns=returns_with_images)
+
+
+
+@app.route('/update_return_status', methods=['POST'])
+def update_return_status():
+    complaint_id = request.form['complaintID']
+    action = request.form['action']
+
+    new_status = 'confirmed' if action == 'confirm' else 'rejected'
+
+    conn.execute(text("""
+        update complaint 
+        set Status = :status 
+        where complaintID = :complaintID
+    """), {'status': new_status, 'complaintID': complaint_id})
+
+    if new_status == 'confirmed':
+        result = conn.execute(text("""
+            select productID, orderID 
+            from complaint 
+            where complaintID = :complaintID
+        """), {'complaintID': complaint_id}).fetchone()
+
+        if result:
+            product_id, order_id = result
+
+            conn.execute(text("""
+                delete from orderitems 
+                where orderID = :orderID and productID = :productID 
+                limit 1
+            """), {'orderID': order_id, 'productID': product_id})
+
+    return redirect(url_for('admin_returns'))
+
+
+
 
 
 if __name__ == '__main__':

@@ -1,19 +1,46 @@
 {% extends 'base.html' %}
+
 {% block body %}
-    <main>
-        <h1 class="page-title">Order Informƒtion</h1>
-        <div class="order-info">
-            {% for order in orders%}
-                <div class="order-card">
-                    <p>Order ID: {{order[0]}}</p>
-                    <p>Date of Order: {{order[2]}}</p>
-                    <p>Total Price: ${{order[3]}}</p>
-                    <p>Shipping Status: {{order[4]}}</p>
-                    <a href="{{ url_for('returns') }}">
-                    <button class="ad-btn">Issue a return?</button>
-                    </a>
-                </div>
-            {% endfor %}
-        </div>
-    </main>
+<main>
+    <h1 class="page-title">Order Information</h1>
+    <div class="order-info">
+        {% for order in orders %}
+            <div class="order-card">
+                <p>Order ID: {{ order['orderID'] }}</p>
+                <p>Date of Order: {{ order['orderDate'] }}</p>
+                <p>Total Price: ${{ order['totalPrice'] }}</p>
+                <p>Shipping Status: {{ order['orderStatus'] }}</p>
+
+                <h4>Products in this order:</h4>
+                <ul>
+                    {% for product in order['products'] %}
+                        <li>
+                            Product ID: {{ product['productID'] }} -
+                            Title: {{ product['title'] }} -
+                            Quantity: {{ product['quantity'] }}
+
+                            <a href="{{ url_for('show_complaint_form', product_id=product['productID'], order_id=order['orderID']) }}">
+                                <button class="ad-btn" style="margin-left: 10px;">Return</button>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+
+                {% if order['returns'] %}
+                    <h4>Returns:</h4>
+                    <ul>
+                        {% for r in order['returns'] %}
+                            <li>
+                                Product ID: {{ r['productID'] }} -
+                                Title: {{ r['title'] }} -
+                                Quantity: {{ r['quantity'] }} -
+                                <strong>Status:</strong> {{ r['status'] }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</main>
 {% endblock %}
