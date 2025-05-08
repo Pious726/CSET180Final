@@ -4,15 +4,15 @@
         <h1 class="page-title">Leave a review!</h1>
         <div class="review-container container">
             <form action="/reviews.html" method="POST">
-                <label for="itemName">Item: <input list="itemName" name="itemName" onkeydown="return false" required></label>
+                <label for="itemName">Item: <input list="itemName" name="itemName" onkeydown="return false" required autocomplete="off"></label>
                 <datalist id="itemName">
                     {% for item in orderItems %}
                         <option value="{{item.Title}}">{{item.Title}}</option>
                     {% endfor %}
                 </datalist><br>
-                <label for="reviewTitle">Title: <input type="text" name="ratingTitle"></label><br>
+                <label for="reviewTitle">Title: <input type="text" name="ratingTitle" autocomplete="off"></label><br>
                 <label for="rating">Rating: <input type="number" name="rating" min="1" max="5" value="1" onkeydown="return false" required></label><br>
-                <label for="itemImage">Image URL: <input name="itemImage" id="itemImage"></label><br>
+                <label for="itemImage">Image URL: <input name="itemImage" id="itemImage" autocomplete="off"></label><br>
                 <label for="review-text">Review:</label><br><textarea name="desc" id="desc" required></textarea><br>
                 <button type="submit" class="ad-btn">Submit</button>
             </form>
