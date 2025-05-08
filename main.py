@@ -107,7 +107,7 @@ def loadshop():
     sizes = request.args.getlist('size')
     availability = request.args.getlist('availability')
 
-    query = 'select * from products natural join Product_Images natural join Product_Sizes natural join Product_Color natural join Product_Categories'
+    query = 'SELECT DISTINCT products.* FROM products JOIN Product_Images ON products.productID = Product_Images.productID JOIN Product_Sizes ON products.productID = Product_Sizes.productID JOIN Product_Color ON products.productID = Product_Color.productID JOIN Product_Categories ON products.productID = Product_Categories.productID'
     conditions = []
 
     if categories:
