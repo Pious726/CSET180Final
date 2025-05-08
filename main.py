@@ -107,22 +107,29 @@ def loadshop():
     sizes = request.args.getlist('size')
     availability = request.args.getlist('availability')
 
-    query = 'select * from products natural join Product_Images'
+    query = 'select * from products natural join Product_Images natural join Product_Sizes natural join Product_Color natural join Product_Categories'
+    conditions = []
 
     if categories:
-        query += f" and Category in {categories}"
+        categ_values = ', '.join(f"'{c}'" for c in categories)
+        conditions.append(f"Category IN ({categ_values})")
 
     if colors:
-        query += f" and Color in {colors}"
+        color_values = ', '.join(f"'{c}'" for c in colors)
+        conditions.append(f"Color IN ({color_values})")
 
     if sizes:
-        query += f" and Sizes in {sizes}"
+        size_values = ', '.join(f"'{s}'" for s in sizes)
+        conditions.append(f"Sizes IN ({size_values})")
 
     if availability:
         if "In Stock" in availability and "Out of Stock" not in availability:
-            query += " and stock > 0"
+            conditions.append("stock > 0")
         elif "Out of Stock" in availability and "In Stock" not in availability:
-            query += " and stock <= 0"
+            conditions.append("stock <= 0")
+
+    if conditions:
+        query += " where " + " and ".join(conditions)
 
     products = list(conn.execute(text(query)))
 
