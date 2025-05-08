@@ -106,9 +106,13 @@ def loadshop():
     colors = request.args.getlist('color')
     sizes = request.args.getlist('size')
     availability = request.args.getlist('availability')
+    search_results = request.args.get('search', '').strip()
 
     query = 'SELECT DISTINCT products.* FROM products JOIN Product_Images ON products.productID = Product_Images.productID JOIN Product_Sizes ON products.productID = Product_Sizes.productID JOIN Product_Color ON products.productID = Product_Color.productID JOIN Product_Categories ON products.productID = Product_Categories.productID'
     conditions = []
+
+    if search_results:
+        conditions.append(f"products.Title LIKE :search")
 
     if categories:
         categ_values = ', '.join(f"'{c}'" for c in categories)
@@ -131,7 +135,7 @@ def loadshop():
     if conditions:
         query += " where " + " and ".join(conditions)
 
-    products = list(conn.execute(text(query)))
+    products = list(conn.execute(text(query), {'search': f'%{search_results}%'} if search_results else {}))
 
     product_categories = [row[0] for row in conn.execute(text('select distinct Category from Product_Categories')).fetchall()]
 
