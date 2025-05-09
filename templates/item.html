@@ -37,7 +37,7 @@
                         </select>
                     </div>
                 </div>
-                {% if inventory %}
+                {% if inventory and inventory > 0 %}
                     <h3>Availability: {{inventory}}</h3>
                     <form action="/item.html" method="POST" id="item-characteristics">
                         <input type="hidden" name="id" value="{{ session['itemID'] }}">

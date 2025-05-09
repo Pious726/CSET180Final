@@ -159,12 +159,15 @@ def loaditem():
 
     color_query = text("SELECT DISTINCT Color FROM Product_Color WHERE productID = :id")
     colors = [row[0] for row in conn.execute(color_query, {'id': itemID})]
+    session['item_colors'] = colors
 
     size_query = text("SELECT DISTINCT Sizes FROM Product_Sizes WHERE productID = :id")
     sizes = [row[0] for row in conn.execute(size_query, {'id': itemID})]
+    session['item_sizes'] = sizes
 
     inventory_query = text("SELECT DISTINCT inventory FROM products WHERE productID = :id")
-    inventory = [row[0] for row in conn.execute(inventory_query, {'id': itemID})]
+    inventory = conn.execute(inventory_query, {'id': itemID}).scalar()
+    session['item_inventory'] = inventory
 
     query = f"select * from reviews natural join customer natural join users where productID = {itemID}"
     filterRating = request.args.get('filterRating')
@@ -185,6 +188,7 @@ def loaditem():
         query += " order by Date desc"
 
     reviewList = list(conn.execute(text(query)))
+    session['item_reviews'] = reviewList
 
     return render_template('item.html', reviewList=reviewList, colors=colors, sizes=sizes, inventory=inventory)
 
@@ -197,70 +201,21 @@ def addtocart():
             item_color = request.form.get('item_color')
             item_size = request.form.get('item_size')
 
-            conn.execute(text(f'insert into Cart_Items (cartID, productID, Color, Size) values ({cartID}, {productID}, {item_color}, {item_size})'))
+            conn.execute(text(f'insert into Cart_Items (cartID, productID, Color, Size) values (:cartID, :productID, :Color, :Size)'), {'cartID': cartID, 'productID': productID, 'Color': item_color, 'Size': item_size})
             conn.commit()
 
+            colors = session.get('item_colors')
+            sizes = session.get('item_sizes')
+            inventory = session.get('item_inventory')
+            reviewList = session.get('item_reviews')
 
-            color_query = text("SELECT DISTINCT Color FROM Product_Color WHERE productID = :id")
-            colors = [row[0] for row in conn.execute(color_query, {'id': productID})]
-
-            size_query = text("SELECT DISTINCT Sizes FROM Product_Sizes WHERE productID = :id")
-            sizes = [row[0] for row in conn.execute(size_query, {'id': productID})]
-
-            inventory_query = text("SELECT DISTINCT inventory FROM products WHERE productID = :id")
-            inventory = [row[0] for row in conn.execute(inventory_query, {'id': productID})]
-
-            query = f"select * from reviews natural join customer natural join users where productID = {productID}"
-            filterRating = request.args.get('filterRating')
-            sortBy = request.args.get('sortBy')
-
-            if filterRating:
-                query += f" and Rating = {filterRating}"
-
-            if sortBy == "date_desc":
-                query += " order by Date desc"
-            elif sortBy == "date_asc":
-                query += " order by Date asc"
-            elif sortBy == "rating_desc":
-                query += " order by Rating desc"
-            elif sortBy == "rating_asc":
-                query += " order by Rating asc"
-            else:
-                query += " order by Date desc"
-
-            reviewList = list(conn.execute(text(query)))
-
-            return render_template('item.html', success="Item added to cart.", error=None, colors=colors, sizes=sizes, inventory=inventory, reviewList=reviewList)
+            return render_template('item.html', success="Item added to cart successfully.", error=None, colors=colors, sizes=sizes, inventory=inventory, reviewList=reviewList)
         except:
-            productID = session.get('itemID')
-            color_query = text("SELECT DISTINCT Color FROM Product_Color WHERE productID = :id")
-            colors = [row[0] for row in conn.execute(color_query, {'id': productID})]
+            colors = session.get('item_colors')
+            sizes = session.get('item_sizes')
+            inventory = session.get('item_inventory')
+            reviewList = session.get('item_reviews')
 
-            size_query = text("SELECT DISTINCT Sizes FROM Product_Sizes WHERE productID = :id")
-            sizes = [row[0] for row in conn.execute(size_query, {'id': productID})]
-
-            inventory_query = text("SELECT DISTINCT inventory FROM products WHERE productID = :id")
-            inventory = [row[0] for row in conn.execute(inventory_query, {'id': productID})]
-
-            query = f"select * from reviews natural join customer natural join users where productID = {productID}"
-            filterRating = request.args.get('filterRating')
-            sortBy = request.args.get('sortBy')
-
-            if filterRating:
-                query += f" and Rating = {filterRating}"
-
-            if sortBy == "date_desc":
-                query += " order by Date desc"
-            elif sortBy == "date_asc":
-                query += " order by Date asc"
-            elif sortBy == "rating_desc":
-                query += " order by Rating desc"
-            elif sortBy == "rating_asc":
-                query += " order by Rating asc"
-            else:
-                query += " order by Date desc"
-
-            reviewList = list(conn.execute(text(query)))
             return render_template('item.html', success=None, error="Error adding item to cart.", colors=colors, sizes=sizes, inventory=inventory, reviewList=reviewList)
 
 @app.route('/cart.html')
