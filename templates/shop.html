@@ -5,7 +5,7 @@
         <div class="product-container">
             <div class="filters">
                 <form method="get" action="{{ url_for('loadshop') }}" class="searchbar-form">
-                    <input type="text" name="search" value="{{ request.args.get('search', '') }}" placeholder="Search.." class="searchbar">
+                    <input type="text" name="search" value="{{ request.args.get('search', '') }}" placeholder="Search.." class="searchbar" autocomplete="off">
                     <button type="submit" class="search-submit">Submit</button>
                 </form>
                 <h2>Filters</h2>

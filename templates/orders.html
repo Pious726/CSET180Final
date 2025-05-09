@@ -20,8 +20,7 @@
                     <ul>
                         {% for product in order['products'] %}
                             <li>
-                                Product ID: {{ product['productID'] }} -
-                                Title: {{ product['title'] }} -
+                                {{ product['title'] }} -
                                 Quantity: {{ product['quantity'] }}
 
                                 <a href="{{ url_for('show_complaint_form', product_id=product['productID'], order_id=order['orderID']) }}">
@@ -36,8 +35,7 @@
                         <ul>
                             {% for r in order['returns'] %}
                                 <li>
-                                    Product ID: {{ r['productID'] }} -
-                                    Title: {{ r['title'] }} -
+                                    {{ r['title'] }} -
                                     Quantity: {{ r['quantity'] }} -
                                     <strong>Status:</strong> {{ r['status'] }}
                                 </li>

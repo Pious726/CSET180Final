@@ -304,8 +304,10 @@ section {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 40px;
     justify-content: center;
+    align-items: start;
     max-width: 1100px;
     margin: 0 auto;
+    padding-bottom: 15px;
 }
 .product-card {
     color: var(--textColor);
@@ -344,6 +346,29 @@ section {
     display: flex;
     gap: 0.5rem;
     justify-content: space-between;
+}
+.searchbar {
+    background-color: var(--secondaryColor);
+    border-top: 4px solid #3f3f3f;
+    border-bottom: 4px solid #272624;
+    border-left: 4px solid #3f3f3f;
+    border-right: 4px solid #272624;
+    color: var(--textColor);
+    padding: 10px;
+    margin-bottom: 10px;
+    font-family: 'MinecraftSeven', sans-serif;
+    font-weight: 100;
+}
+.search-submit {
+    background-color: var(--accentGreen);
+    border-top: 4px solid #83c471;
+    border-bottom: 4px solid #5f9e4e;
+    border-left: 4px solid #83c471;
+    border-right: 4px solid #5f9e4e;
+    color: var(--textColor);
+    padding: 8px;
+    cursor: pointer;
+    margin-bottom: 10px;
 }
 
 
@@ -444,7 +469,19 @@ section {
     width: 50px;
     height: 50px;
 }
-
+select {
+    background-color: var(--secondaryColor);
+    border-top: 4px solid #3f3f3f;
+    border-bottom: 4px solid #272624;
+    border-left: 4px solid #3f3f3f;
+    border-right: 4px solid #272624;
+    color: var(--textColor);
+    padding: 8px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-family: 'MinecraftSeven', sans-serif;
+    font-weight: 100;
+}
 
 /* Styles for cart */
 .cart {
