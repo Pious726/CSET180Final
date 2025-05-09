@@ -128,9 +128,9 @@ def loadshop():
 
     if availability:
         if "In Stock" in availability and "Out of Stock" not in availability:
-            conditions.append("stock > 0")
+            conditions.append("inventory > 0")
         elif "Out of Stock" in availability and "In Stock" not in availability:
-            conditions.append("stock <= 0")
+            conditions.append("inventory <= 0")
 
     if conditions:
         query += " where " + " and ".join(conditions)
