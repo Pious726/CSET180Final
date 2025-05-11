@@ -6,15 +6,15 @@
             <div class="product-list">
                 {% for product in products[:3] %}
                     <div class="product-card">
-                        <img src="../static/images/grass.jpg" alt={{product[2]}}>
-                        <p>{{product[2]}}</p>
-                        <p>${{product[7]}}</p>
+                        <img src="{{product.Image}}" alt={{product.Title}}>
+                        <p>{{product.Title}}</p>
+                        <p>${{product.Discount_Price}}</p>
                         <form action="{{ url_for('saveiteminfo') }}" method="POST">
-                            <input type="hidden" name="id" value="{{ product[0] }}">
-                            <input type="hidden" name="name" value="{{ product[2] }}">
-                            <input type="hidden" name="price" value="{{ product[7] }}">
-                            <input type="hidden" name="description" value="{{ product[3] }}">
-                            <input type="hidden" name="image" value="../static/images/grass.jpg">
+                            <input type="hidden" name="id" value="{{ product.productID }}">
+                            <input type="hidden" name="name" value="{{ product.Title }}">
+                            <input type="hidden" name="price" value="{{ product.Discount_Price }}">
+                            <input type="hidden" name="description" value="{{ product.Description }}">
+                            <input type="hidden" name="image" value="{{product.Image}}">
                             <button type="submit" class="ad-btn">View Item!</button>
                         </form>
                     </div>
@@ -34,15 +34,15 @@
             <div class="product-list">
                 {% for product in products[3:6] %}
                     <div class="product-card">
-                        <img src="../static/images/grass.jpg" alt={{product[2]}}>
-                        <p>{{product[2]}}</p>
-                        <p>${{product[7]}}</p>
+                        <img src="{{product.Image}}" alt={{product.Title}}>
+                        <p>{{product.Title}}</p>
+                        <p>${{product.Discount_Price}}</p>
                         <form action="{{ url_for('saveiteminfo') }}" method="POST">
-                            <input type="hidden" name="id" value="{{ product[0] }}">
-                            <input type="hidden" name="name" value="{{ product[2] }}">
-                            <input type="hidden" name="price" value="{{ product[7] }}">
-                            <input type="hidden" name="description" value="{{ product[3] }}">
-                            <input type="hidden" name="image" value="../static/images/grass.jpg">
+                            <input type="hidden" name="id" value="{{ product.productID }}">
+                            <input type="hidden" name="name" value="{{ product.Title }}">
+                            <input type="hidden" name="price" value="{{ product.Discount_Price }}">
+                            <input type="hidden" name="description" value="{{ product.Description }}">
+                            <input type="hidden" name="image" value="{{product.Image}}">
                             <button type="submit" class="ad-btn">View Item!</button>
                         </form>
                     </div>

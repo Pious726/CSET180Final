@@ -383,7 +383,6 @@ section {
 .item-img {
     display: block;
     text-align: center;
-    background-color: #fff;
 }
 .item-text {
     background-color: var(--secondaryColor);

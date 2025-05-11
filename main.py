@@ -188,7 +188,6 @@ def loaditem():
         query += " order by Date desc"
 
     reviewList = list(conn.execute(text(query)))
-    session['item_reviews'] = reviewList
 
     return render_template('item.html', reviewList=reviewList, colors=colors, sizes=sizes, inventory=inventory)
 
@@ -207,14 +206,50 @@ def addtocart():
             colors = session.get('item_colors')
             sizes = session.get('item_sizes')
             inventory = session.get('item_inventory')
-            reviewList = session.get('item_reviews')
+            query = f"select * from reviews natural join customer natural join users where productID = {productID}"
+            filterRating = request.args.get('filterRating')
+            sortBy = request.args.get('sortBy')
+
+            if filterRating:
+                query += f" and Rating = {filterRating}"
+
+            if sortBy == "date_desc":
+                query += " order by Date desc"
+            elif sortBy == "date_asc":
+                query += " order by Date asc"
+            elif sortBy == "rating_desc":
+                query += " order by Rating desc"
+            elif sortBy == "rating_asc":
+                query += " order by Rating asc"
+            else:
+                query += " order by Date desc"
+
+            reviewList = list(conn.execute(text(query)))
 
             return render_template('item.html', success="Item added to cart successfully.", error=None, colors=colors, sizes=sizes, inventory=inventory, reviewList=reviewList)
         except:
             colors = session.get('item_colors')
             sizes = session.get('item_sizes')
             inventory = session.get('item_inventory')
-            reviewList = session.get('item_reviews')
+            query = f"select * from reviews natural join customer natural join users where productID = {productID}"
+            filterRating = request.args.get('filterRating')
+            sortBy = request.args.get('sortBy')
+
+            if filterRating:
+                query += f" and Rating = {filterRating}"
+
+            if sortBy == "date_desc":
+                query += " order by Date desc"
+            elif sortBy == "date_asc":
+                query += " order by Date asc"
+            elif sortBy == "rating_desc":
+                query += " order by Rating desc"
+            elif sortBy == "rating_asc":
+                query += " order by Rating asc"
+            else:
+                query += " order by Date desc"
+
+            reviewList = list(conn.execute(text(query)))
 
             return render_template('item.html', success=None, error="Error adding item to cart.", colors=colors, sizes=sizes, inventory=inventory, reviewList=reviewList)
 
@@ -224,7 +259,8 @@ def getcartitems():
     customerID = conn.execute(text('select customerID from users natural join customer where IsLoggedIn = 1')).scalar()
     cartID = conn.execute(text(f'select cartID from cart where customerID = {customerID}')).scalar()
     cartItems = list(conn.execute(text(f'select * from Cart_Items natural join products where cartID = {cartID}')))
-    totalPrice = round(sum(item[9] * item[2] for item in cartItems), 2)
+
+    totalPrice = round(sum(item.Discount_Price * item.Quantity for item in cartItems), 2)
     return render_template('cart.html', cartItems=cartItems, totalPrice=totalPrice)
 
 @app.route('/cart.html', methods=['POST'])
