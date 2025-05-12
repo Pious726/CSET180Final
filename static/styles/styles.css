@@ -317,12 +317,16 @@ section {
 .product-card img {
     width: 100%;
     height: 250px;
-    object-fit: cover;
+    object-fit: contain;
     margin-bottom: 10px;
+    background-color: #fff;
 }
 .product-card p {
     margin: 8px 0;
     font-size: 1em;
+}
+.no-items {
+    margin: 0 auto;
 }
 .vendor-card {
     display: flex;
@@ -383,6 +387,7 @@ section {
 .item-img {
     display: block;
     text-align: center;
+    width: 40%;
 }
 .item-text {
     background-color: var(--secondaryColor);

@@ -108,7 +108,13 @@ def loadshop():
     availability = request.args.getlist('availability')
     search_results = request.args.get('search', '').strip()
 
-    query = 'SELECT DISTINCT products.* FROM products JOIN Product_Images ON products.productID = Product_Images.productID JOIN Product_Sizes ON products.productID = Product_Sizes.productID JOIN Product_Color ON products.productID = Product_Color.productID JOIN Product_Categories ON products.productID = Product_Categories.productID'
+    query = '''
+    SELECT DISTINCT products.*, Product_Images.Images
+    FROM products 
+    JOIN Product_Images ON products.productID = Product_Images.productID 
+    JOIN Product_Sizes ON products.productID = Product_Sizes.productID 
+    JOIN Product_Color ON products.productID = Product_Color.productID 
+    JOIN Product_Categories ON products.productID = Product_Categories.productID'''
     conditions = []
 
     if search_results:
@@ -197,10 +203,11 @@ def addtocart():
             customerID = conn.execute(text('select customerID from users natural join customer where IsLoggedIn = 1;')).scalar()
             cartID = conn.execute(text(f'select cartID from cart where customerID = {customerID}')).scalar()
             productID = session.get('itemID')
+            productImage = session.get('itemImage')
             item_color = request.form.get('item_color')
             item_size = request.form.get('item_size')
 
-            conn.execute(text(f'insert into Cart_Items (cartID, productID, Color, Size) values (:cartID, :productID, :Color, :Size)'), {'cartID': cartID, 'productID': productID, 'Color': item_color, 'Size': item_size})
+            conn.execute(text(f'insert into Cart_Items (cartID, productID, Color, Size, Image) values (:cartID, :productID, :Color, :Size, :Image)'), {'cartID': cartID, 'productID': productID, 'Color': item_color, 'Size': item_size, 'Image': productImage})
             conn.commit()
 
             colors = session.get('item_colors')
@@ -226,7 +233,7 @@ def addtocart():
 
             reviewList = list(conn.execute(text(query)))
 
-            return render_template('item.html', success="Item added to cart successfully.", error=None, colors=colors, sizes=sizes, inventory=inventory, reviewList=reviewList)
+            return render_template('item.html', success="Item added to cart successfully.", error=None, colors=colors, sizes=sizes, inventory=inventory, reviewList=reviewList, productImage=productImage)
         except:
             colors = session.get('item_colors')
             sizes = session.get('item_sizes')
