@@ -143,7 +143,7 @@ def loadshop():
 
     products = list(conn.execute(text(query), {'search': f'%{search_results}%'} if search_results else {}))
 
-    product_categories = [row[0] for row in conn.execute(text('select distinct Category from Product_Categories')).fetchall()]
+    product_categories = [row[0] for row in conn.execute(text('select distinct Category from Products')).fetchall()]
 
     product_sizes = [row[0] for row in conn.execute(text('select distinct Sizes from Product_Sizes')).fetchall()]
     product_colors = [row[0] for row in conn.execute(text('select distinct Color from Product_Color')).fetchall()]

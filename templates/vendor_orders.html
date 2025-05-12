@@ -14,6 +14,9 @@
                     <a href="{{ url_for('returns') }}">
                         <button class="ad-btn">Issue a return?</button>
                     </a>
+                    <form method="POST" action="{{ url_for('update_shipping_status') }}>
+                    <button type="submit" name="action" value="confirm">Confirm</button>
+                    </form>
                 </div>
             {% endfor %}
         {% else %}
