@@ -656,10 +656,6 @@ def vendor_orders():
 
     # Render the vendor_orders.html template with the orders data
     return render_template('vendor_orders.html', orders=orders)
-    
-@app.route('/returns', methods=['POST'])
-def returns():
-    return render_template('returns.html')
 
 @app.route('/file_complaint/<int:product_id>/<int:order_id>', methods=['GET'])
 def show_complaint_form(product_id, order_id):
