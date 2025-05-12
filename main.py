@@ -298,7 +298,7 @@ def placeorder():
     customerID = conn.execute(text('select customerID from users natural join customer where IsLoggedIn = 1;')).scalar()
     cartID = conn.execute(text(f'select cartID from cart where customerID = {customerID}')).scalar()
     cartItems = list(conn.execute(text(f'select * from Cart_Items natural join products where cartID = {cartID}')))
-    totalPrice = round(sum(item[9] * item[2] for item in cartItems), 2)
+    totalPrice = round(sum(item.Discount_Price * item.Quantity for item in cartItems), 2)
 
     conn.execute(text(f'insert into orders (customerID, OrderDate, TotalPrice, OrderStatus) values ({customerID}, CURDATE(),{totalPrice}, "Pending")'))
     orderID = conn.execute(text('select LAST_INSERT_ID()')).scalar()
