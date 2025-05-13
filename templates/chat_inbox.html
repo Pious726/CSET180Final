@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<main>
+    <h1 class="page-title">Your Chats</h1>
+    <div class="chat-list">
+        {% if chats %}
+            <ul>
+                {% for chat in chats %}
+                    <li>
+                        <a href="{{ url_for('chat_page', chat_id=chat.chatID) }}">
+                            Chat with 
+                            {% if account_type == 'customer' %}
+                                {% if chat.admin_name %}
+                                    Admin {{ chat.admin_name }}
+                                {% else %}
+                                    Vendor {{ chat.vendor_name }}
+                                {% endif %}
+                            {% elif account_type == 'vendor' %}
+                                Customer {{ chat.customer_name }}
+                            {% elif account_type == 'admin' %}
+                                Customer {{ chat.customer_name }}
+                            {% endif %}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No chats yet.</p>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

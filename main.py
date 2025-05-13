@@ -1,5 +1,5 @@
 from datetime import date
-from flask import Flask, render_template, request, session, url_for, redirect
+from flask import Flask, flash, render_template, request, session, url_for, redirect
 from sqlalchemy import create_engine, text
 import bcrypt
  
@@ -131,7 +131,7 @@ def loadshop():
 
     if categories:
         categ_values = ', '.join(f"'{c}'" for c in categories)
-        conditions.append(f"Category IN ({categ_values})")
+        conditions.append(f"products.category IN ({categ_values})")
 
     if colors:
         color_values = ', '.join(f"'{c}'" for c in colors)
@@ -148,16 +148,16 @@ def loadshop():
             conditions.append("inventory <= 0")
 
     if conditions:
-        query += " where " + " and ".join(conditions)
+        query += " WHERE " + " AND ".join(conditions)
 
     products = list(conn.execute(text(query), {'search': f'%{search_results}%'} if search_results else {}))
 
-    product_categories = [row[0] for row in conn.execute(text('select distinct Category from Products')).fetchall()]
-
-    product_sizes = [row[0] for row in conn.execute(text('select distinct Sizes from Product_Sizes')).fetchall()]
-    product_colors = [row[0] for row in conn.execute(text('select distinct Color from Product_Color')).fetchall()]
+    product_categories = [row[0] for row in conn.execute(text('SELECT DISTINCT category FROM products')).fetchall()]
+    product_sizes = [row[0] for row in conn.execute(text('SELECT DISTINCT Sizes FROM Product_Sizes')).fetchall()]
+    product_colors = [row[0] for row in conn.execute(text('SELECT DISTINCT Color FROM Product_Color')).fetchall()]
 
     return render_template('shop.html', products=products, product_sizes=product_sizes, product_colors=product_colors, product_categories=product_categories)
+
 
 @app.route('/shop.html', methods=['POST'])
 def saveiteminfo():
@@ -319,6 +319,39 @@ def placeorder():
     conn.commit()
 
     return redirect(url_for('orderthanks'))
+
+@app.route('/update_shipping_status', methods=['POST'])
+def update_shipping_status():
+    order_id = request.form.get('orderID')
+    new_status = request.form.get('status')
+
+    # Fetch current status from DB
+    current_status = conn.execute(
+        text("select OrderStatus from orders where orderID = :id"),
+        {'id': order_id}
+    ).scalar()
+
+    valid_transitions = {
+        'Pending': 'Confirmed',
+        'Confirmed': 'Handed to Delivery Partner',
+        'Handed to Delivery Partner': 'Shipped'
+    }
+
+    # Prevent moving from 'Confirmed' directly to 'Shipped' without 'Handed to Delivery Partner'
+    if current_status == 'Confirmed' and new_status == 'Shipped':
+        flash('You must first select "Handed to Delivery Partner" before marking it as shipped.')
+        return redirect(url_for('vendor_orders'))
+
+    if valid_transitions.get(current_status) == new_status:
+        conn.execute(
+            text("update orders set OrderStatus = :status where orderID = :id"),
+            {'status': new_status, 'id': order_id}
+        )
+        conn.commit()
+
+    return redirect(url_for('vendor_orders'))
+
+
 
 @app.route('/thanks.html')
 def orderthanks():
@@ -785,6 +818,170 @@ def update_return_status():
             """), {'orderID': order_id, 'productID': product_id})
 
     return redirect(url_for('admin_returns'))
+
+@app.route('/chat', methods=['GET', 'POST'])
+def start_chat():
+    user_id = session.get('user_id')
+    account_type = session.get('account_type')
+
+    if account_type != 'customer':
+        return redirect(url_for('login'))
+
+    # Get customerID from userID
+    customer_row = conn.execute(
+        text("select customerID from customer where userID = :uid"),
+        {'uid': user_id}
+    ).fetchone()
+
+    if not customer_row:
+        return "Customer not found", 404
+
+    customer_id = customer_row[0]
+
+    if request.method == 'POST':
+        vendor_id = request.form.get('vendor_id') or None
+        admin_id = request.form.get('admin_id') or None
+
+        if vendor_id == '':
+            vendor_id = None
+        if admin_id == '':
+            admin_id = None
+
+        if (vendor_id and admin_id) or (not vendor_id and not admin_id):
+            return "Please select either a vendor OR an admin (not both or none).", 400
+
+        if vendor_id:
+            chat = conn.execute(text(""" 
+                select chatID from chat 
+                where customerID = :cust and vendorID = :vend and adminID is null
+            """), {'cust': customer_id, 'vend': vendor_id}).fetchone()
+
+            if not chat:
+                conn.execute(text("""
+                    insert into chat (customerID, vendorID) values (:cust, :vend)
+                """), {'cust': customer_id, 'vend': vendor_id})
+                conn.commit()
+                chat = conn.execute(text("select last_insert_id()")).fetchone()
+
+        elif admin_id:
+            chat = conn.execute(text("""
+                select chatID from chat 
+                where customerID = :cust and adminID = :admin and vendorID is null
+            """), {'cust': customer_id, 'admin': admin_id}).fetchone()
+
+            if not chat:
+                conn.execute(text("""
+                    insert into chat (customerID, adminID) values (:cust, :admin)
+                """), {'cust': customer_id, 'admin': admin_id})
+                conn.commit()
+                chat = conn.execute(text("select last_insert_id()")).fetchone()
+
+        return redirect(url_for('chat_page', chat_id=chat[0]))
+
+    vendors = conn.execute(text("select vendorID, Name from vendor")).fetchall()
+    admins = conn.execute(text("""
+        select a.adminID, u.name 
+        from admin a join users u on a.userID = u.userID
+    """)).fetchall()
+
+    return render_template('chat.html', vendors=vendors, admins=admins)
+
+
+@app.route('/chat/<int:chat_id>', methods=['GET', 'POST'])
+def chat_page(chat_id):
+    account_type = session.get('account_type')
+    user_id = session.get('user_id')
+
+    if request.method == 'POST':
+        message = request.form['message']
+        conn.execute(text("""
+            insert into messages (chatID, sender_type, sender_id, message_text)
+            values (:chat_id, :sender_type, :sender_id, :message)
+        """), {'chat_id': chat_id, 'sender_type': account_type, 'sender_id': user_id, 'message': message})
+        conn.commit()
+        return redirect(url_for('chat_page', chat_id=chat_id))
+
+    # Load chat messages
+    messages = conn.execute(text("""
+        select sender_type, message_text, timestamp
+        from messages
+        where chatID = :chat_id
+        order by timestamp asc
+    """), {'chat_id': chat_id}).fetchall()
+
+    return render_template('chat_page.html', messages=messages, chat_id=chat_id)
+
+@app.route('/chat/inbox')
+def chat_inbox():
+    account_type = session.get('account_type')
+    user_id = session.get('user_id')
+
+    if account_type == 'customer':
+        # Get customerID
+        customer_row = conn.execute(
+            text("select customerID from customer where userID = :uid"),
+            {'uid': user_id}
+        ).fetchone()
+
+        if not customer_row:
+            return "Customer not found", 404
+
+        customer_id = customer_row[0]
+
+        chats = conn.execute(text("""
+            select c.chatID, u.name as admin_name, v.name as vendor_name
+            from chat c
+            left join admin a on c.adminID = a.adminID
+            left join users u on a.userID = u.userID
+            left join vendor v on c.vendorID = v.vendorID
+            where c.customerID = :id
+        """), {'id': customer_id}).fetchall()
+
+    elif account_type == 'vendor':
+        # Get vendorID
+        vendor_row = conn.execute(
+            text("select vendorID from vendor where userID = :uid"),
+            {'uid': user_id}
+        ).fetchone()
+
+        if not vendor_row:
+            return "Vendor not found", 404
+
+        vendor_id = vendor_row[0]
+
+        chats = conn.execute(text("""
+            select c.chatID, cu.name as customer_name
+            from chat c
+            join customer cu on c.customerID = cu.customerID
+            where c.vendorID = :id
+        """), {'id': vendor_id}).fetchall()
+
+    elif account_type == 'admin':
+        # Get adminID
+        admin_row = conn.execute(
+            text("select adminID from admin where userID = :uid"),
+            {'uid': user_id}
+        ).fetchone()
+
+        if not admin_row:
+            return "Admin not found", 404
+
+        admin_id = admin_row[0]
+
+        chats = conn.execute(text("""
+            select c.chatID, cu.name as customer_name
+            from chat c
+            join customer cu on c.customerID = cu.customerID
+            where c.adminID = :id
+        """), {'id': admin_id}).fetchall()
+
+    else:
+        return "Unauthorized", 403
+
+    return render_template('chat_inbox.html', chats=chats, account_type=account_type)
+
+
+
 
 
 if __name__ == '__main__':

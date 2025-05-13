@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<main>
+    <h1 class="page-title">Start a Chat</h1>
+    <div class="chat-selection">
+        <form method="POST" action="{{ url_for('start_chat') }}">
+            <label for="admin_select">Select Admin</label>
+            <select name="admin_id" id="admin_select">
+                <option value="">Select Admin</option>
+                {% for admin in admins %}
+                    <option value="{{ admin.adminID }}">{{ admin.name }}</option>
+                {% endfor %}
+            </select>
+            
+            <label for="vendor_select">Select Vendor</label>
+            <select name="vendor_id" id="vendor_select">
+                <option value="">Select Vendor</option>
+                {% for vendor in vendors %}
+                    <option value="{{ vendor.vendorID }}">{{ vendor.Name }}</option>
+                {% endfor %}
+            </select>
+
+<div style="text-align: center; margin-top: 30px;">
+            <a href="{{ url_for('chat_inbox') }}">
+                <button type="button" class="ad-btn">View Your Chats</button>
+            </a>
+        </div>
+            
+            <button type="submit">Start Chat</button>
+        </form>
+    </div>
+</main>
+{% endblock %}
