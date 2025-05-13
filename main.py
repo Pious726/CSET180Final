@@ -26,9 +26,9 @@ def signup():
             VALUES (:Name, :Email, :Username, :Password, :account_type)
         '''), userData)
         if userData["account_type"] == "customer":
-            conn.execute(text(f'insert into customer (userID, name) values (LAST_INSERT_ID(), {userData["Name"]})'))
+            conn.execute(text(f'insert into customer (userID, name) values (LAST_INSERT_ID(), "{userData["Name"]}")'))
         elif userData["account_type"] == "vendor":
-            conn.execute(text(f'insert into vendor (userID, name) values (LAST_INSERT_ID(), {userData["Name"]})'))
+            conn.execute(text(f'insert into vendor (userID, name) values (LAST_INSERT_ID(), "{userData["Name"]}")'))
         conn.commit()
 
         return render_template('login.html', success="Successful", error=None)
@@ -591,18 +591,21 @@ def add_product():
         try:
             form = request.form
 
+            # Determine the vendor ID
             if account_type == 'admin':
                 vendor_id = form.get('vendor_id')
             else:
-                
                 vendor_id = conn.execute(
                     text('SELECT vendorID FROM vendor WHERE userID = :user_id'),
                     {'user_id': user_id}
                 ).scalar()
 
+            # Insert the product with the category included
             conn.execute(text("""
-                Insert Into products (VendorID, Title, Description, Warranty, Inventory, Original_Price, Discount_Price)
-                Values (:vendor_id, :title, :description, :warranty, :inventory, :original_price, :discount_price)
+                insert into products 
+                (VendorID, Title, Description, Warranty, Inventory, Original_Price, Discount_Price, Category)
+                values 
+                (:vendor_id, :title, :description, :warranty, :inventory, :original_price, :discount_price, :category)
             """), {
                 'vendor_id': vendor_id,
                 'title': form.get('title'),
@@ -610,21 +613,24 @@ def add_product():
                 'warranty': form.get('warranty'),
                 'inventory': form.get('inventory'),
                 'original_price': form.get('original_price'),
-                'discount_price': form.get('discount_price')
+                'discount_price': form.get('discount_price'),
+                'category': form.get('category')
             })
 
-            product_id = conn.execute(text("Select Last_Insert_ID()")).scalar()
+            # Get the new product ID
+            product_id = conn.execute(text("SELECT LAST_INSERT_ID()")).scalar()
 
+            # Insert optional details
             if form.get('new_size'):
-                conn.execute(text("Insert Into product_sizes (ProductID, Sizes) Values (:product_id, :size)"),
+                conn.execute(text("INSERT INTO product_sizes (ProductID, Sizes) VALUES (:product_id, :size)"),
                              {'product_id': product_id, 'size': form.get('new_size')})
 
             if form.get('new_color'):
-                conn.execute(text("Insert Into product_color (ProductID, Color) Values (:product_id, :color)"),
+                conn.execute(text("INSERT INTO product_color (ProductID, Color) VALUES (:product_id, :color)"),
                              {'product_id': product_id, 'color': form.get('new_color')})
 
             if form.get('new_image'):
-                conn.execute(text("Insert Into product_images (ProductID, Images) Values (:product_id, :image)"),
+                conn.execute(text("INSERT INTO product_images (ProductID, Images) VALUES (:product_id, :image)"),
                              {'product_id': product_id, 'image': form.get('new_image')})
 
             conn.commit()
@@ -633,15 +639,19 @@ def add_product():
                 return redirect(url_for('all_products'))
             else:
                 return redirect(url_for('vendor_products'))
-            
-        except:
+
+        except Exception as e:
             conn.rollback()
+            print(f"Error during product insert: {e}")
             return "Something went wrong while adding your product."
-        
+
+    # Render form
     vendors = []
     if account_type == 'admin':
-        vendors = conn.execute(text("select VendorID, Name from vendor")).fetchall()
+        vendors = conn.execute(text("SELECT VendorID, Name FROM vendor")).fetchall()
+
     return render_template('addproduct.html', vendors=vendors, account_type=account_type)
+
 
 @app.route('/delete_product/<int:product_id>', methods=['POST'])
 def delete_product(product_id):
