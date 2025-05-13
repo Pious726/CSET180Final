@@ -22,61 +22,55 @@
                 <div class="item-characteristics">
                     <div class="colors">
                         <h3>Colors:</h3>
-                        <ul>
-                            <li>Color 1</li>
-                            <li>Color 2</li>
-                            <li>Color 3</li>
+                        <select name="item_color" id="item_color" form="item-characteristics">
                             {% for color in colors %}
-                            <li>{{color}}</li>
+                                <option value="{{color}}">{{color}}</option>
                             {% endfor %}
-                        </ul>
+                        </select>
                     </div>
                     <div class="sizes">
                         <h3>Sizes:</h3>
-                        <ul>
-                            <li>Size 1</li>
-                            <li>Size 2</li>
-                            <li>Size 3</li>
+                        <select name="item_size" id="item_size" form="item-characteristics">
                             {% for size in sizes %}
-                            <li>{{size}}</li>
+                                <option value="{{size}}">{{size}}</option>
                             {% endfor %}
-                        </ul>
+                        </select>
                     </div>
                 </div>
-                {% if inventory %}
+                {% if inventory and inventory > 0 %}
                     <h3>Availability: {{inventory}}</h3>
-                {% elif inventory %}
+                    <form action="/item.html" method="POST" id="item-characteristics">
+                        <input type="hidden" name="id" value="{{ session['itemID'] }}">
+                        <button type="submit" class="ad-btn">Add To Cart</button>
+                    </form>
+                {% elif inventory == 0%}
                     <h3>Out of Stock</h3>
                 {% endif %}
-
-                <form action="/item.html" method="POST">
-                    <input type="hidden" name="id" value="{{ session['itemID'] }}">
-                    <button type="submit" class="ad-btn">Add To Cart</button>
-                </form>
             </div>
         </div>
         <div class="product-reviews container">
             <h1>Product Reviews</h1>
+            <form action="/item.html" method="GET">
+                <select name="filterRating" id="filterRating">
+                    <option value="">All</option>
+                    <option value="5">5 Stars</option>
+                    <option value="4">4 Stars</option>
+                    <option value="3">3 Stars</option>
+                    <option value="2">2 Stars</option>
+                    <option value="1">1 Stars</option>
+                </select>
+
+                <select name="sortBy" id="sortBy">
+                    <option value="date_desc">Date (Newest)</option>
+                    <option value="date_asc">Date (Oldest)</option>
+                    <option value="rating_desc">Rating (Highest)</option>
+                    <option value="rating_asc">Rating (Lowest)</option>
+                </select>
+
+                <button type="submit" class="ad-btn">Apply</button>
+            </form>
             {% if reviewList %}
-                <form action="/item.html" method="GET">
-                    <select name="filterRating" id="filterRating">
-                        <option value="">All</option>
-                        <option value="5">5 Stars</option>
-                        <option value="4">4 Stars</option>
-                        <option value="3">3 Stars</option>
-                        <option value="2">2 Stars</option>
-                        <option value="1">1 Stars</option>
-                    </select>
-
-                    <select name="sortBy" id="sortBy">
-                        <option value="date_desc">Date (Newest)</option>
-                        <option value="date_asc">Date (Oldest)</option>
-                        <option value="rating_desc">Rating (Highest)</option>
-                        <option value="rating_asc">Rating (Lowest)</option>
-                    </select>
-
-                    <button type="submit" class="ad-btn">Apply</button>
-                </form>
+                
                 {% for review in reviewList %}
                     <div class="review-info">
                         <h2>{{review.ratingTitle}}</h2>

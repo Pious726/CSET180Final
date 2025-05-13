@@ -20,8 +20,12 @@
                     <ul>
                         {% for product in order['products'] %}
                             <li>
+<<<<<<< HEAD
                                 Product ID: {{ product['productID'] }} - 
                                 Title: {{ product['title'] }} - 
+=======
+                                {{ product['title'] }} -
+>>>>>>> 0e504350181313524144a90e4126c83a5eaaa2e6
                                 Quantity: {{ product['quantity'] }}
 
                                 <a href="{{ url_for('show_complaint_form', product_id=product['productID'], order_id=order['orderID']) }}">
@@ -36,9 +40,14 @@
                         <ul>
                             {% for r in order['returns'] %}
                                 <li>
+<<<<<<< HEAD
                                     Product ID: {{ r['productID'] }} - 
                                     Title: {{ r['title'] }} - 
                                     Quantity: {{ r['quantity'] }} - 
+=======
+                                    {{ r['title'] }} -
+                                    Quantity: {{ r['quantity'] }} -
+>>>>>>> 0e504350181313524144a90e4126c83a5eaaa2e6
                                     <strong>Status:</strong> {{ r['status'] }}
                                 </li>
                             {% endfor %}

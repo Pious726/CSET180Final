@@ -81,6 +81,7 @@ a {
     color: var(--accentGreen);
 }
 
+
 /* Styles for registration */
 .register_input {
     margin-top: 10px;
@@ -160,6 +161,7 @@ input::placeholder {
     text-align: center;
 }
 
+
 /* Styles for header*/
 header {
     background-color: var(--secondaryColor);
@@ -174,6 +176,7 @@ header {
     position: relative;
     z-index: 1;
 }
+
 
 /* Styles for nav */
 nav {
@@ -197,6 +200,7 @@ nav {
 .navlist a:hover {
     color: var(--accentGreen);
 }
+
 
 /* Styles for main */
 .page-title {
@@ -244,7 +248,6 @@ section {
 .ad-text-box p {
     margin-bottom: 15px;
 }
-
 .vendor-btn {
     background-color: var(--accentGreen);
     border-top: 4px solid #83c471;
@@ -257,7 +260,6 @@ section {
     bottom: 10px;
     position: relative;
 }
-
 .ad-btn {
     background-color: var(--accentGreen);
     border-top: 4px solid #83c471;
@@ -275,9 +277,7 @@ section {
     border-left: 4px solid #5f9e4e;
     border-right: 4px solid #83c471;
 }
-#grid5-1 .product-list.flex, #grid5-2 .flex {
-    justify-content: space-evenly;
-}
+
 
 /* Styles for shop page */
 .product-container {
@@ -302,14 +302,32 @@ section {
 .product-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 30px;
-    flex: 1;
+    gap: 40px;
+    justify-content: center;
+    align-items: start;
+    max-width: 1100px;
+    margin: 0 auto;
     padding-bottom: 15px;
 }
-.product-list.flex {
-    align-items: start;
+.product-card {
+    color: var(--textColor);
+    text-align: center;
+    width: var(calc(50% - 40px));
 }
-
+.product-card img {
+    width: 100%;
+    height: 250px;
+    object-fit: contain;
+    margin-bottom: 10px;
+    background-color: #fff;
+}
+.product-card p {
+    margin: 8px 0;
+    font-size: 1em;
+}
+.no-items {
+    margin: 0 auto;
+}
 .vendor-card {
     display: flex;
     flex-direction: column;
@@ -327,28 +345,36 @@ section {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
     border-radius: 8px;
 }
-
 .vendor-actions {
     margin-top: auto;
     display: flex;
     gap: 0.5rem;
     justify-content: space-between;
 }
-
-.product-card {
+.searchbar {
+    background-color: var(--secondaryColor);
+    border-top: 4px solid #3f3f3f;
+    border-bottom: 4px solid #272624;
+    border-left: 4px solid #3f3f3f;
+    border-right: 4px solid #272624;
     color: var(--textColor);
-    text-align: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-family: 'MinecraftSeven', sans-serif;
+    font-weight: 100;
 }
-.product-card img {
-    width: 100%;
-    height: 250px;
-    object-fit: cover;
+.search-submit {
+    background-color: var(--accentGreen);
+    border-top: 4px solid #83c471;
+    border-bottom: 4px solid #5f9e4e;
+    border-left: 4px solid #83c471;
+    border-right: 4px solid #5f9e4e;
+    color: var(--textColor);
+    padding: 8px;
+    cursor: pointer;
     margin-bottom: 10px;
 }
-.product-card p {
-    margin: 8px 0;
-    font-size: 1em;
-}
+
 
 /* Styles for item page */
 .item-info {
@@ -361,7 +387,7 @@ section {
 .item-img {
     display: block;
     text-align: center;
-    background-color: #fff;
+    width: 40%;
 }
 .item-text {
     background-color: var(--secondaryColor);
@@ -447,7 +473,19 @@ section {
     width: 50px;
     height: 50px;
 }
-
+select {
+    background-color: var(--secondaryColor);
+    border-top: 4px solid #3f3f3f;
+    border-bottom: 4px solid #272624;
+    border-left: 4px solid #3f3f3f;
+    border-right: 4px solid #272624;
+    color: var(--textColor);
+    padding: 8px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-family: 'MinecraftSeven', sans-serif;
+    font-weight: 100;
+}
 
 /* Styles for cart */
 .cart {
@@ -487,6 +525,11 @@ section {
     font-size: 16px;
     font-weight: 100;
 }
+.smol {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
 
 /* Styles for checkout */
 .checkout-container {
@@ -519,6 +562,7 @@ section {
     font-family: 'MinecraftSeven', sans-serif;
     font-weight: 100;
 }
+
 
 /* Styles for reviews page */
 .review-container {
@@ -569,6 +613,7 @@ section {
     height: 200px;
 }
 
+
 /* Styles for accounts page */
 .account-info {
     background-color: var(--secondaryColor);
@@ -584,6 +629,7 @@ section {
 .account-info p {
     margin: 10px 0;
 }
+
 
 /* Styles for order page */
 .order-info {
@@ -607,6 +653,7 @@ section {
 .order-card p {
     margin: 10px 0;
 }
+
 
 /* Styles for footer */
 footer {
@@ -687,20 +734,18 @@ input.news-btn {
     font-size: 10px;
 }
 
-/* Edit Page styles: */ 
 
+/* Edit Page styles: */ 
 #edit_form {
     background-color: var(--secondaryColor);
     margin: 200px;
     padding: 50px 100px;
 }
-
 form#edit_form {
     margin: auto;
     margin-top: 150px;
     margin-bottom: 150px;
 }
-
 #edit_form input, #edit_form textarea {
     padding: 5px 10px;
     font-size: .8em;
@@ -709,27 +754,22 @@ form#edit_form {
     display: block;
     margin-top: 5px;
 }
-
 #edit_form textarea {
     resize: vertical;
     max-height: 300px;
 }
-
 #edit_form li {
     list-style-type: none;
 }
-
 #edit_form h3 {
     color: var(--accentGreen);
 }
-
 #edit_form label {
     font-family: 'MinecraftSeven';
     src: url('../Fonts/Minecraft-Seven_v2.ttf') format('truetype');
     font-weight: 100;
     font-style: normal;
 }
-
 .specification {
     display: flex;
     flex-direction: row;

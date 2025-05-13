@@ -4,6 +4,10 @@
         <h1 class="page-title">Products for everyone!</h1>
         <div class="product-container">
             <div class="filters">
+                <form method="get" action="{{ url_for('loadshop') }}" class="searchbar-form">
+                    <input type="text" name="search" value="{{ request.args.get('search', '') }}" placeholder="Search.." class="searchbar" autocomplete="off">
+                    <button type="submit" class="search-submit">Submit</button>
+                </form>
                 <h2>Filters</h2>
 
                 <form id="filter-form" method="get" action="{{ url_for('loadshop')}}">
@@ -27,10 +31,11 @@
                     <label><input type="checkbox" name="availability" value="Out of Stock" {% if 'Out of Stock' in request.args.getlist('availability') %}checked{%endif%}> Out of Stock</label><br>
                 </form>
             </div>
+            {% if products %}
             <div class="product-list flex">
                 {% for product in products %}
                     <div class="product-card">
-                        <img src="../static/images/grass.jpg" alt={{product[2]}}>
+                        <img src="{{product.Images}}" alt={{product.Title}}>
                         <p>{{product.Title}}</p>
                         <p>${{product.Discount_Price}}</p>
                         <form action="{{ url_for('saveiteminfo') }}" method="POST">
@@ -38,12 +43,15 @@
                             <input type="hidden" name="name" value="{{ product.Title }}">
                             <input type="hidden" name="price" value="{{ product.Discount_Price }}">
                             <input type="hidden" name="description" value="{{ product.Description }}">
-                            <input type="hidden" name="image" value="../static/images/grass.jpg">
+                            <input type="hidden" name="image" value="{{product.Images}}">
                             <button type="submit" class="ad-btn">View Item!</button>
                         </form>
                     </div>
                 {% endfor %}
-            </div> 
+            </div>
+            {% else %}
+                <p class="no-items">It seems like there are no items available.</p>
+            {% endif %}
         </div>
     </main>
     <script>

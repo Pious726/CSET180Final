@@ -17,14 +17,23 @@ def loadapp():
 @app.route('/register', methods=["POST"])
 def signup():
     try:
+        userData = dict(request.form)
+        hashed_password = bcrypt.hashpw(userData["Password"].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+        userData["Password"] = hashed_password
+
         conn.execute(text('''
             INSERT INTO Users (name, email_address, username, password, account_type) 
             VALUES (:Name, :Email, :Username, :Password, :account_type)
-        '''), request.form)
-
+        '''), userData)
+        if userData["account_type"] == "customer":
+            conn.execute(text(f'insert into customer (userID, name) values (LAST_INSERT_ID(), {userData["Name"]})'))
+        elif userData["account_type"] == "vendor":
+            conn.execute(text(f'insert into vendor (userID, name) values (LAST_INSERT_ID(), {userData["Name"]})'))
         conn.commit()
+
         return render_template('login.html', success="Successful", error=None)
-    except:
+    except Exception as e:
+        print({e})
         return render_template('index.html', error="Failed", success=None)
     
 @app.route('/login.html', methods=["GET"])
@@ -37,16 +46,18 @@ def getlogins():
 def login():
     if request.method == 'POST':
         email = request.form.get("Email")
-        password = request.form.get("Password")
+        password = request.form.get("Password").encode('utf-8')
+        print(password)
 
         user = conn.execute(
             text('SELECT userID, password, account_type FROM users WHERE email_address = :email'),
             {'email': email}
         ).fetchone()
+        print(user)
 
         if user:
-            stored_password = user[1]
-            if password == stored_password:
+            stored_password = user[1].encode('utf-8')
+            if bcrypt.checkpw(password, stored_password):
         
                 session['user_id'] = user[0]
                 session['email'] = email
@@ -96,7 +107,6 @@ def logout():
 
 @app.route('/home.html')
 def loadhome():
-
     products = conn.execute(text('select * from products natural join Product_Images')).fetchall()
     return render_template('home.html', products=products)
 
@@ -106,15 +116,18 @@ def loadshop():
     colors = request.args.getlist('color')
     sizes = request.args.getlist('size')
     availability = request.args.getlist('availability')
+    search_results = request.args.get('search', '').strip()
 
     query = '''
-        SELECT DISTINCT products.* 
-        FROM products 
-        JOIN Product_Images ON products.productID = Product_Images.productID 
-        JOIN Product_Sizes ON products.productID = Product_Sizes.productID 
-        JOIN Product_Color ON products.productID = Product_Color.productID
-    '''
+    SELECT DISTINCT products.*, Product_Images.Images
+    FROM products 
+    JOIN Product_Images ON products.productID = Product_Images.productID 
+    JOIN Product_Sizes ON products.productID = Product_Sizes.productID 
+    JOIN Product_Color ON products.productID = Product_Color.productID'''
     conditions = []
+
+    if search_results:
+        conditions.append(f"products.Title LIKE :search")
 
     if categories:
         categ_values = ', '.join(f"'{c}'" for c in categories)
@@ -137,7 +150,7 @@ def loadshop():
     if conditions:
         query += " WHERE " + " AND ".join(conditions)
 
-    products = list(conn.execute(text(query)))
+    products = list(conn.execute(text(query), {'search': f'%{search_results}%'} if search_results else {}))
 
     product_categories = [row[0] for row in conn.execute(text('SELECT DISTINCT category FROM products')).fetchall()]
     product_sizes = [row[0] for row in conn.execute(text('SELECT DISTINCT Sizes FROM Product_Sizes')).fetchall()]
@@ -158,6 +171,19 @@ def saveiteminfo():
 @app.route('/item.html')
 def loaditem():
     itemID = session.get('itemID')
+
+    color_query = text("SELECT DISTINCT Color FROM Product_Color WHERE productID = :id")
+    colors = [row[0] for row in conn.execute(color_query, {'id': itemID})]
+    session['item_colors'] = colors
+
+    size_query = text("SELECT DISTINCT Sizes FROM Product_Sizes WHERE productID = :id")
+    sizes = [row[0] for row in conn.execute(size_query, {'id': itemID})]
+    session['item_sizes'] = sizes
+
+    inventory_query = text("SELECT DISTINCT inventory FROM products WHERE productID = :id")
+    inventory = conn.execute(inventory_query, {'id': itemID}).scalar()
+    session['item_inventory'] = inventory
+
     query = f"select * from reviews natural join customer natural join users where productID = {itemID}"
     filterRating = request.args.get('filterRating')
     sortBy = request.args.get('sortBy')
@@ -178,7 +204,7 @@ def loaditem():
 
     reviewList = list(conn.execute(text(query)))
 
-    return render_template('item.html', reviewList=reviewList)
+    return render_template('item.html', reviewList=reviewList, colors=colors, sizes=sizes, inventory=inventory)
 
 @app.route('/item.html', methods=['POST'])
 def addtocart():
@@ -186,11 +212,62 @@ def addtocart():
             customerID = conn.execute(text('select customerID from users natural join customer where IsLoggedIn = 1;')).scalar()
             cartID = conn.execute(text(f'select cartID from cart where customerID = {customerID}')).scalar()
             productID = session.get('itemID')
-            conn.execute(text(f'insert into Cart_Items (cartID, productID) values ({cartID}, {productID})'))
+            productImage = session.get('itemImage')
+            item_color = request.form.get('item_color')
+            item_size = request.form.get('item_size')
+
+            conn.execute(text(f'insert into Cart_Items (cartID, productID, Color, Size, Image) values (:cartID, :productID, :Color, :Size, :Image)'), {'cartID': cartID, 'productID': productID, 'Color': item_color, 'Size': item_size, 'Image': productImage})
             conn.commit()
-            return render_template('item.html', success="Item added to cart successfully.", error=None)
+
+            colors = session.get('item_colors')
+            sizes = session.get('item_sizes')
+            inventory = session.get('item_inventory')
+            query = f"select * from reviews natural join customer natural join users where productID = {productID}"
+            filterRating = request.args.get('filterRating')
+            sortBy = request.args.get('sortBy')
+
+            if filterRating:
+                query += f" and Rating = {filterRating}"
+
+            if sortBy == "date_desc":
+                query += " order by Date desc"
+            elif sortBy == "date_asc":
+                query += " order by Date asc"
+            elif sortBy == "rating_desc":
+                query += " order by Rating desc"
+            elif sortBy == "rating_asc":
+                query += " order by Rating asc"
+            else:
+                query += " order by Date desc"
+
+            reviewList = list(conn.execute(text(query)))
+
+            return render_template('item.html', success="Item added to cart successfully.", error=None, colors=colors, sizes=sizes, inventory=inventory, reviewList=reviewList, productImage=productImage)
         except:
-            return render_template('item.html', success=None, error="Error adding item to cart.")
+            colors = session.get('item_colors')
+            sizes = session.get('item_sizes')
+            inventory = session.get('item_inventory')
+            query = f"select * from reviews natural join customer natural join users where productID = {productID}"
+            filterRating = request.args.get('filterRating')
+            sortBy = request.args.get('sortBy')
+
+            if filterRating:
+                query += f" and Rating = {filterRating}"
+
+            if sortBy == "date_desc":
+                query += " order by Date desc"
+            elif sortBy == "date_asc":
+                query += " order by Date asc"
+            elif sortBy == "rating_desc":
+                query += " order by Rating desc"
+            elif sortBy == "rating_asc":
+                query += " order by Rating asc"
+            else:
+                query += " order by Date desc"
+
+            reviewList = list(conn.execute(text(query)))
+
+            return render_template('item.html', success=None, error="Error adding item to cart.", colors=colors, sizes=sizes, inventory=inventory, reviewList=reviewList)
 
 @app.route('/cart.html')
 def getcartitems():
@@ -198,7 +275,8 @@ def getcartitems():
     customerID = conn.execute(text('select customerID from users natural join customer where IsLoggedIn = 1')).scalar()
     cartID = conn.execute(text(f'select cartID from cart where customerID = {customerID}')).scalar()
     cartItems = list(conn.execute(text(f'select * from Cart_Items natural join products where cartID = {cartID}')))
-    totalPrice = round(sum(item[9] * item[2] for item in cartItems), 2)
+
+    totalPrice = round(sum(item.Discount_Price * item.Quantity for item in cartItems), 2)
     return render_template('cart.html', cartItems=cartItems, totalPrice=totalPrice)
 
 @app.route('/cart.html', methods=['POST'])
@@ -229,7 +307,7 @@ def placeorder():
     customerID = conn.execute(text('select customerID from users natural join customer where IsLoggedIn = 1;')).scalar()
     cartID = conn.execute(text(f'select cartID from cart where customerID = {customerID}')).scalar()
     cartItems = list(conn.execute(text(f'select * from Cart_Items natural join products where cartID = {cartID}')))
-    totalPrice = round(sum(item[9] * item[2] for item in cartItems), 2)
+    totalPrice = round(sum(item.Discount_Price * item.Quantity for item in cartItems), 2)
 
     conn.execute(text(f'insert into orders (customerID, OrderDate, TotalPrice, OrderStatus) values ({customerID}, CURDATE(),{totalPrice}, "Pending")'))
     orderID = conn.execute(text('select LAST_INSERT_ID()')).scalar()
@@ -620,10 +698,6 @@ def vendor_orders():
 
     # Render the vendor_orders.html template with the orders data
     return render_template('vendor_orders.html', orders=orders)
-    
-@app.route('/returns', methods=['POST'])
-def returns():
-    return render_template('returns.html')
 
 @app.route('/file_complaint/<int:product_id>/<int:order_id>', methods=['GET'])
 def show_complaint_form(product_id, order_id):
