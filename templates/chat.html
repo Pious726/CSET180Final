@@ -3,7 +3,7 @@
 {% block body %}
 <main>
     <h1 class="page-title">Start a Chat</h1>
-    <div class="chat-selection">
+    <div class="chat-selection container">
         <form method="POST" action="{{ url_for('start_chat') }}">
             <label for="admin_select">Select Admin</label>
             <select name="admin_id" id="admin_select">
@@ -11,7 +11,7 @@
                 {% for admin in admins %}
                     <option value="{{ admin.adminID }}">{{ admin.name }}</option>
                 {% endfor %}
-            </select>
+            </select><br>
             
             <label for="vendor_select">Select Vendor</label>
             <select name="vendor_id" id="vendor_select">
@@ -21,13 +21,13 @@
                 {% endfor %}
             </select>
 
-<div style="text-align: center; margin-top: 30px;">
-            <a href="{{ url_for('chat_inbox') }}">
-                <button type="button" class="ad-btn">View Your Chats</button>
-            </a>
-        </div>
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="{{ url_for('chat_inbox') }}">
+                    <button type="button" class="ad-btn">View Your Chats</button>
+                </a>
+            </div><br>
             
-            <button type="submit">Start Chat</button>
+            <button type="submit" class="ad-btn">Start Chat</button>
         </form>
     </div>
 </main>
