@@ -25,6 +25,10 @@ def signup():
             INSERT INTO Users (name, email_address, username, password, account_type) 
             VALUES (:Name, :Email, :Username, :Password, :account_type)
         '''), userData)
+        if userData["account_type"] == "customer":
+            conn.execute(text(f'insert into customer (userID, name) values (LAST_INSERT_ID(), {userData["Name"]})'))
+        elif userData["account_type"] == "vendor":
+            conn.execute(text(f'insert into vendor (userID, name) values (LAST_INSERT_ID(), {userData["Name"]})'))
         conn.commit()
 
         return render_template('login.html', success="Successful", error=None)
@@ -120,8 +124,7 @@ def loadshop():
     FROM products 
     JOIN Product_Images ON products.productID = Product_Images.productID 
     JOIN Product_Sizes ON products.productID = Product_Sizes.productID 
-    JOIN Product_Color ON products.productID = Product_Color.productID 
-    JOIN Product_Categories ON products.productID = Product_Categories.productID'''
+    JOIN Product_Color ON products.productID = Product_Color.productID'''
     conditions = []
 
     if search_results:
