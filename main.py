@@ -18,7 +18,7 @@ def loadapp():
 def signup():
     try:
         userData = dict(request.form)
-        hashed_password = bcrypt.hashpw(userData["Password"].encode('utf-8'), bcrypt.gensalt())
+        hashed_password = bcrypt.hashpw(userData["Password"].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
         userData["Password"] = hashed_password
 
         conn.execute(text('''
@@ -43,15 +43,17 @@ def login():
     if request.method == 'POST':
         email = request.form.get("Email")
         password = request.form.get("Password").encode('utf-8')
+        print(password)
 
         user = conn.execute(
             text('SELECT userID, password, account_type FROM users WHERE email_address = :email'),
             {'email': email}
         ).fetchone()
+        print(user)
 
         if user:
-            stored_password = user[1]
-            if password == stored_password:
+            stored_password = user[1].encode('utf-8')
+            if bcrypt.checkpw(password, stored_password):
         
                 session['user_id'] = user[0]
                 session['email'] = email
