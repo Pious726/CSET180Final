@@ -13,10 +13,12 @@
                             <div class="cart-info">
                                 <p>{{item.Title}}</p>
                                 <p>${{item.Discount_Price * item.Quantity}}</p>
+                                <p class="smol">Color: {{item.Color}} Size: {{item.Size}}</p>
                                 <form action="/update_quantity" method="POST">
                                     <input type="hidden" name="id" value="{{ item.productID }}">
                                     <input type="number" name="quantity" class="quantity" value="{{item.Quantity}}" min="1" max="99">
                                     <button type="submit" class="ad-btn">Update</button>
+                                    <br>
                                 </form>
                             </div>
                         </div>

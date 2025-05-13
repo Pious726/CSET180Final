@@ -525,6 +525,10 @@ select {
     font-size: 16px;
     font-weight: 100;
 }
+.smol {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
 
 
 /* Styles for checkout */

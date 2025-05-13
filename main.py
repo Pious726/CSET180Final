@@ -107,7 +107,6 @@ def logout():
 
 @app.route('/home.html')
 def loadhome():
-
     products = conn.execute(text('select * from products natural join Product_Images')).fetchall()
     return render_template('home.html', products=products)
 
