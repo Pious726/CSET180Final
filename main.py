@@ -26,9 +26,9 @@ def signup():
             VALUES (:Name, :Email, :Username, :Password, :account_type)
         '''), userData)
         if userData["account_type"] == "customer":
-            conn.execute(text(f'insert into customer (userID, name) values (LAST_INSERT_ID(), {userData["Name"]})'))
+            conn.execute(text(f'insert into customer (userID, name) values (LAST_INSERT_ID(), "{userData["Name"]}")'))
         elif userData["account_type"] == "vendor":
-            conn.execute(text(f'insert into vendor (userID, name) values (LAST_INSERT_ID(), {userData["Name"]})'))
+            conn.execute(text(f'insert into vendor (userID, name) values (LAST_INSERT_ID(), "{userData["Name"]}")'))
         conn.commit()
 
         return render_template('login.html', success="Successful", error=None)
