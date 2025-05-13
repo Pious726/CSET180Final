@@ -351,8 +351,6 @@ def update_shipping_status():
 
     return redirect(url_for('vendor_orders'))
 
-
-
 @app.route('/thanks.html')
 def orderthanks():
     return render_template('thanks.html')
