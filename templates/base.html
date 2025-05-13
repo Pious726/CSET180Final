@@ -20,9 +20,9 @@
                 <li><a href="home.html">HOME</a></li>
                 <li><a href="shop.html">SHOP</a></li>
                 <li><a href="accounts.html">MY ACCOUNT</a></li>
-                <li><a href="orders.html">MY ORDERS</a></li>
-                <li><a href="cart.html">CART</a></li>
+                <li><a href="orders.html">MY ORDERS</a></li>                
                 {% if session.get('account_type') == 'customer' %}
+                <li><a href="cart.html">CART</a></li>
                 <li><a href="{{ url_for('start_chat') }}">CHAT</a></li>
                 {% endif %}
                 {% if session.get('account_type') == 'vendor' %}

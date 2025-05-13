@@ -20,7 +20,6 @@
                     <ul>
                         {% for product in order['products'] %}
                             <li>
-<<<<<<< HEAD
                                 {{ product['title'] }} -
                                 Quantity: {{ product['quantity'] }}
 
@@ -36,19 +35,13 @@
                         <ul>
                             {% for r in order['returns'] %}
                                 <li>
-<<<<<<< HEAD
                                     {{ r['title'] }} -
                                     Quantity: {{ r['quantity'] }} -
-=======
-<<<<<<< HEAD
                                     Product ID: {{ r['productID'] }} - 
                                     Title: {{ r['title'] }} - 
                                     Quantity: {{ r['quantity'] }} - 
-=======
                                     {{ r['title'] }} -
                                     Quantity: {{ r['quantity'] }} -
->>>>>>> 0e504350181313524144a90e4126c83a5eaaa2e6
->>>>>>> faa145a9a5e0ddeb2464aa4a9978057f70cbe6b4
                                     <strong>Status:</strong> {{ r['status'] }}
                                 </li>
                             {% endfor %}
