@@ -525,15 +525,18 @@ def edit_product(product_id):
                 values (:product_id, :color)
             """), {'product_id': product_id, 'color': new_color})
 
-      
         new_image = form.get('new_image')
         if new_image:
+            # Replace all existing images with the new one
+            conn.execute(text("""
+                delete from product_images where ProductID = :product_id
+            """), {'product_id': product_id})
+            
             conn.execute(text("""
                 insert into product_images (ProductID, Images)
                 values (:product_id, :image)
             """), {'product_id': product_id, 'image': new_image})
 
-       
         conn.commit()
 
         if account_type == 'admin':  
@@ -541,7 +544,7 @@ def edit_product(product_id):
         else:
             return redirect(url_for('vendor_products'))
 
-    
+    # GET request handling
     if account_type == 'admin':  
         product = conn.execute(
             text("select * from products where ProductID = :product_id"),
@@ -989,6 +992,29 @@ def chat_inbox():
         return "Unauthorized", 403
 
     return render_template('chat_inbox.html', chats=chats, account_type=account_type)
+
+
+@app.route('/rehash_passwords')
+def rehash_old_passwords():
+    try:
+        users = conn.execute(text("select userID, password from users where userID <= 55")).fetchall()
+        updated_count = 0
+
+        for user_id, old_password in users:
+            # Only rehash if it's not already hashed
+            if not old_password.startswith('$2b$'):
+                hashed = bcrypt.hashpw(old_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+                conn.execute(text("update users set password = :hashed where userID = :user_id"), {
+                    'hashed': hashed,
+                    'user_id': user_id
+                })
+                updated_count += 1
+
+        conn.commit()
+        return f"Successfully rehashed {updated_count} password(s)."
+    except Exception as e:
+        conn.rollback()
+        return f"Error occurred: {e}"
 
 
 
