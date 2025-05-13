@@ -17,14 +17,19 @@ def loadapp():
 @app.route('/register', methods=["POST"])
 def signup():
     try:
+        userData = dict(request.form)
+        hashed_password = bcrypt.hashpw(userData["Password"].encode('utf-8'), bcrypt.gensalt())
+        userData["Password"] = hashed_password
+
         conn.execute(text('''
             INSERT INTO Users (name, email_address, username, password, account_type) 
             VALUES (:Name, :Email, :Username, :Password, :account_type)
-        '''), request.form)
-
+        '''), userData)
         conn.commit()
+
         return render_template('login.html', success="Successful", error=None)
-    except:
+    except Exception as e:
+        print({e})
         return render_template('index.html', error="Failed", success=None)
     
 @app.route('/login.html', methods=["GET"])
@@ -37,7 +42,7 @@ def getlogins():
 def login():
     if request.method == 'POST':
         email = request.form.get("Email")
-        password = request.form.get("Password")
+        password = request.form.get("Password").encode('utf-8')
 
         user = conn.execute(
             text('SELECT userID, password, account_type FROM users WHERE email_address = :email'),
