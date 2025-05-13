@@ -9,5 +9,13 @@
             <p>Password: {{account[4]}}</p>
             <p>Account Type: {{account[5]}}</p>
         </div>
+
+        {% if session.get('account_type') in ['vendor', 'admin'] %}
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="{{ url_for('chat_inbox') }}">
+            <button class="ad-btn">View Customer Chats</button>
+        </a>
+    </div>
+{% endif %}
     </main>
 {% endblock %}

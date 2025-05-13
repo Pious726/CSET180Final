@@ -20,8 +20,8 @@
                     <ul>
                         {% for product in order['products'] %}
                             <li>
-                                Product ID: {{ product['productID'] }} -
-                                Title: {{ product['title'] }} -
+                                Product ID: {{ product['productID'] }} - 
+                                Title: {{ product['title'] }} - 
                                 Quantity: {{ product['quantity'] }}
 
                                 <a href="{{ url_for('show_complaint_form', product_id=product['productID'], order_id=order['orderID']) }}">
@@ -36,9 +36,9 @@
                         <ul>
                             {% for r in order['returns'] %}
                                 <li>
-                                    Product ID: {{ r['productID'] }} -
-                                    Title: {{ r['title'] }} -
-                                    Quantity: {{ r['quantity'] }} -
+                                    Product ID: {{ r['productID'] }} - 
+                                    Title: {{ r['title'] }} - 
+                                    Quantity: {{ r['quantity'] }} - 
                                     <strong>Status:</strong> {{ r['status'] }}
                                 </li>
                             {% endfor %}
@@ -53,5 +53,29 @@
             </div>
         {% endif %}
     </div>
+
+    <!-- Links to Chat Inbox and Vendor/Admin specific chat pages based on account type -->
+    {% if session.get('account_type') == 'customer' %}
+        <div class="chat-link">
+            <p>Need support? You can start a chat with a vendor or admin.</p>
+            <a href="{{ url_for('chat_inbox') }}">
+                <button class="ad-btn">Go to Chat Inbox</button>
+            </a>
+        </div>
+    {% elif session.get('account_type') == 'vendor' %}
+        <div class="chat-link">
+            <p>Manage your customer conversations in the chat inbox.</p>
+            <a href="{{ url_for('chat_inbox') }}">
+                <button class="ad-btn">Go to Vendor Chat Inbox</button>
+            </a>
+        </div>
+    {% elif session.get('account_type') == 'admin' %}
+        <div class="chat-link">
+            <p>Manage customer support chats here.</p>
+            <a href="{{ url_for('chat_inbox') }}">
+                <button class="ad-btn">Go to Admin Chat Inbox</button>
+            </a>
+        </div>
+    {% endif %}
 </main>
 {% endblock %}

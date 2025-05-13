@@ -22,6 +22,9 @@
                 <li><a href="accounts.html">MY ACCOUNT</a></li>
                 <li><a href="orders.html">MY ORDERS</a></li>
                 <li><a href="cart.html">CART</a></li>
+                {% if session.get('account_type') == 'customer' %}
+                <li><a href="{{ url_for('start_chat') }}">Chat</a></li>
+                {% endif %}
                 {% if session.get('account_type') == 'vendor' %}
                 <li><a href="{{ url_for('vendor_products') }}">MY PRODUCTS</a></li>
                 {% endif %}
