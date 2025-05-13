@@ -158,7 +158,6 @@ def loadshop():
 
     return render_template('shop.html', products=products, product_sizes=product_sizes, product_colors=product_colors, product_categories=product_categories)
 
-
 @app.route('/shop.html', methods=['POST'])
 def saveiteminfo():
     session['itemID'] = request.form.get('id')
