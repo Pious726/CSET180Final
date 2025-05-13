@@ -119,44 +119,56 @@ def loadshop():
     search_results = request.args.get('search', '').strip()
 
     query = '''
-    SELECT DISTINCT products.*, Product_Images.Images
-    FROM products 
-    JOIN Product_Images ON products.productID = Product_Images.productID 
-    JOIN Product_Sizes ON products.productID = Product_Sizes.productID 
-    JOIN Product_Color ON products.productID = Product_Color.productID'''
+    SELECT DISTINCT p.*, pi.Images
+    FROM products p
+    JOIN Product_Images pi ON p.productID = pi.productID
+    LEFT JOIN Product_Sizes ps ON p.productID = ps.productID
+    LEFT JOIN Product_Color pc ON p.productID = pc.productID
+    '''
+    
     conditions = []
+    params = {}
 
     if search_results:
-        conditions.append(f"products.Title LIKE :search")
+        conditions.append("p.Title LIKE :search")
+        params['search'] = f'%{search_results}%'
 
     if categories:
-        categ_values = ', '.join(f"'{c}'" for c in categories)
-        conditions.append(f"products.category IN ({categ_values})")
+        conditions.append(f"p.category IN ({', '.join(':cat' + str(i) for i in range(len(categories)))})")
+        for i, val in enumerate(categories):
+            params[f'cat{i}'] = val
 
     if colors:
-        color_values = ', '.join(f"'{c}'" for c in colors)
-        conditions.append(f"Color IN ({color_values})")
+        conditions.append(f"pc.Color IN ({', '.join(':color' + str(i) for i in range(len(colors)))})")
+        for i, val in enumerate(colors):
+            params[f'color{i}'] = val
 
     if sizes:
-        size_values = ', '.join(f"'{s}'" for s in sizes)
-        conditions.append(f"Sizes IN ({size_values})")
+        conditions.append(f"ps.Sizes IN ({', '.join(':size' + str(i) for i in range(len(sizes)))})")
+        for i, val in enumerate(sizes):
+            params[f'size{i}'] = val
 
     if availability:
         if "In Stock" in availability and "Out of Stock" not in availability:
-            conditions.append("inventory > 0")
+            conditions.append("p.inventory > 0")
         elif "Out of Stock" in availability and "In Stock" not in availability:
-            conditions.append("inventory <= 0")
+            conditions.append("p.inventory <= 0")
 
     if conditions:
         query += " WHERE " + " AND ".join(conditions)
 
-    products = list(conn.execute(text(query), {'search': f'%{search_results}%'} if search_results else {}))
+    products = list(conn.execute(text(query), params))
 
     product_categories = [row[0] for row in conn.execute(text('SELECT DISTINCT category FROM products')).fetchall()]
     product_sizes = [row[0] for row in conn.execute(text('SELECT DISTINCT Sizes FROM Product_Sizes')).fetchall()]
     product_colors = [row[0] for row in conn.execute(text('SELECT DISTINCT Color FROM Product_Color')).fetchall()]
 
-    return render_template('shop.html', products=products, product_sizes=product_sizes, product_colors=product_colors, product_categories=product_categories)
+    return render_template('shop.html',
+                           products=products,
+                           product_sizes=product_sizes,
+                           product_colors=product_colors,
+                           product_categories=product_categories)
+
 
 @app.route('/shop.html', methods=['POST'])
 def saveiteminfo():

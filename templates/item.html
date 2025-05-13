@@ -19,24 +19,26 @@
                 <p>${{ session['price'] }}</p>
                 <h3>ITEM DESCRIPTION:</h3>
                 <p>{{ session['itemDesc'] }}</p>
-                <div class="item-characteristics">
-                    <div class="colors">
-                        <h3>Colors:</h3>
-                        <select name="item_color" id="item_color" form="item-characteristics">
-                            {% for color in colors %}
-                                <option value="{{color}}">{{color}}</option>
-                            {% endfor %}
-                        </select>
+                {% if colors %}
+                    <div class="item-characteristics">
+                        <div class="colors">
+                            <h3>Colors:</h3>
+                            <select name="item_color" id="item_color" form="item-characteristics">
+                                {% for color in colors %}
+                                    <option value="{{color}}">{{color}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="sizes">
+                            <h3>Sizes:</h3>
+                            <select name="item_size" id="item_size" form="item-characteristics">
+                                {% for size in sizes %}
+                                    <option value="{{size}}">{{size}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
-                    <div class="sizes">
-                        <h3>Sizes:</h3>
-                        <select name="item_size" id="item_size" form="item-characteristics">
-                            {% for size in sizes %}
-                                <option value="{{size}}">{{size}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
+                {% endif %}
                 {% if inventory and inventory > 0 %}
                     <h3>Availability: {{inventory}}</h3>
                     <form action="/item.html" method="POST" id="item-characteristics">
