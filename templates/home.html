@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block body %}
+    <main>
+        <h1 class="page-title">Welcome to the Unoffical Minecrƒft store!</h1>
+        <section id="grid5-1">
+            <div class="product-list">
+                {% for product in products[:3] %}
+                    <div class="product-card">
+                        <img src="{{product.Images}}" alt={{product.Title}}>
+                        <p>{{product.Title}}</p>
+                        <p>${{product.Discount_Price}}</p>
+                        <form action="{{ url_for('saveiteminfo') }}" method="POST">
+                            <input type="hidden" name="id" value="{{ product.productID }}">
+                            <input type="hidden" name="name" value="{{ product.Title }}">
+                            <input type="hidden" name="price" value="{{ product.Discount_Price }}">
+                            <input type="hidden" name="description" value="{{ product.Description }}">
+                            <input type="hidden" name="image" value="{{product.Image}}">
+                            <button type="submit" class="ad-btn">View Item!</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            </div> 
+        </section>
+
+        <section id="advertisement-1">
+            <div class="ad-text-box">
+                <h2>Shop Plushies here!</h2>
+                <p>A plush for everyone!</p>
+                <a href="shop.html"><button class="ad-btn">Shop Here!</button></a>
+            </div>
+        </section>
+
+        <section id="grid5-2">
+            <div class="product-list">
+                {% for product in products[3:6] %}
+                    <div class="product-card">
+                        <img src="{{product.Images}}" alt={{product.Title}}>
+                        <p>{{product.Title}}</p>
+                        <p>${{product.Discount_Price}}</p>
+                        <form action="{{ url_for('saveiteminfo') }}" method="POST">
+                            <input type="hidden" name="id" value="{{ product.productID }}">
+                            <input type="hidden" name="name" value="{{ product.Title }}">
+                            <input type="hidden" name="price" value="{{ product.Discount_Price }}">
+                            <input type="hidden" name="description" value="{{ product.Description }}">
+                            <input type="hidden" name="image" value="{{product.Image}}">
+                            <button type="submit" class="ad-btn">View Item!</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            </div> 
+        </section>
+        
+        <section id="advertisement-2">
+            <div class="ad-text-box">
+                <h2>A Minecraft Movie</h2>
+                <p>MERCH OUT NOW!</p>
+                <a href="shop.html"><button class="ad-btn">Shop Here!</button></a>
+            </div>
+        </section>
+    </main>
+{% endblock %}

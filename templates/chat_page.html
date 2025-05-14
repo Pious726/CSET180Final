@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<main>
+    <h1 class="page-title">Chat</h1>
+
+    <div class="chat-box">
+        {% for msg in messages %}
+            <div class="message {{ msg.sender_type }}">
+                <strong>{{ msg.sender_type.capitalize() }}:</strong>
+                {{ msg.message_text }} <br>
+                <small>{{ msg.timestamp }}</small>
+            </div>
+        {% endfor %}
+    </div>
+
+    <form method="POST" action="{{ url_for('chat_page', chat_id=chat_id) }}">
+        <textarea name="message" required></textarea>
+        <button type="submit" class="ad-btn">Send</button>
+    </form>
+</main>
+{% endblock %}

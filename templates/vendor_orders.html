@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<main>
+    <h1 class="page-title">Order Information</h1>
+    <div class="order-info">
+        {% if orders %}
+            {% for order in orders %}
+                <div class="order-card">
+                    <p>Order ID: {{ order[0] }}</p>
+                    <p>Date of Order: {{ order[2] }}</p>
+                    <p>Total Price: ${{ order[3] }}</p>
+                    <p>Shipping Status: {{ order[4] }}</p>
+                    
+                    {% if order[4] == 'Pending' %}
+                    <form method="POST" action="{{ url_for('update_shipping_status') }}">
+                        <input type="hidden" name="orderID" value="{{ order[0] }}">
+                        <input type="hidden" name="status" value="Confirmed">
+                        <button class= 'ad-btn' type="submit">Confirm</button>
+                    </form>
+                    {% elif order[4] == 'Confirmed' %}
+                    <!-- Dropdown for Handed to Delivery Partner and Shipped -->
+                    <form method="POST" action="{{ url_for('update_shipping_status') }}">
+                        <input type="hidden" name="orderID" value="{{ order[0] }}">
+                        <select name="status">
+                            <option value="Handed to Delivery Partner">Handed to Delivery Partner</option>
+                            <option value="Shipped" disabled>Shipped</option>
+                        </select>
+                        <button class='ad-btn' type="submit">Update Status</button>
+                    </form>
+                    {% elif order[4] == 'Handed to Delivery Partner' %}
+                    <form method="POST" action="{{ url_for('update_shipping_status') }}">
+                        <input type="hidden" name="orderID" value="{{ order[0] }}">
+                        <select name="status">
+                            <option value="Shipped">Shipped</option>
+                        </select>
+                        <button class='ad-btn' type="submit">Mark as Shipped</button>
+                    </form>
+                    {% elif order[4] == 'Shipped' %}
+                    <p>Status: Shipped ✅</p>
+                    {% endif %}
+                    
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No orders available for your products.</p>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

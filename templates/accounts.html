@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block body %}
+    <main class="account-main">
+        <h1 class="page-title">Account Informƒtion</h1>
+        <div class="account-info container">
+            <p>Name: {{account[1]}}</p>
+            <p>Email Address: {{account[2]}}</p>
+            <p>Username: {{account[3]}}</p>
+            <p>Account Type: {{account[5]}}</p>
+        </div>
+
+        {% if session.get('account_type') in ['vendor', 'admin'] %}
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="{{ url_for('chat_inbox') }}">
+            <button class="ad-btn">View Customer Chats</button>
+        </a>
+    </div>
+{% endif %}
+    </main>
+{% endblock %}

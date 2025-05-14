@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block body %}
+    <main>
+        <h1 class="page-title">Your Cƒrt</h1>
+        <div class="cart container">
+            {% if cartItems %}
+                {% for item in cartItems%}
+                    <div class="cart-item-card">
+                        <div class="cart-item">
+                            <div class="cart-img">
+                                <img src="{{ item.Image }}" alt="{{item.Title}}">
+                            </div>
+                            <div class="cart-info">
+                                <p>{{item.Title}}</p>
+                                <p>${{item.Discount_Price * item.Quantity}}</p>
+                                <p class="smol">Color: {{item.Color}} Size: {{item.Size}}</p>
+                                <form action="/update_quantity" method="POST">
+                                    <input type="hidden" name="id" value="{{ item.productID }}">
+                                    <input type="number" name="quantity" class="quantity" value="{{item.Quantity}}" min="1" max="99">
+                                    <button type="submit" class="ad-btn">Update</button>
+                                    <br>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <div class="cartitem-form">
+                            <form action="/cart.html" method="POST">
+                                <input type="hidden" name="id" value="{{ item.productID }}">
+                                <button type="submit" class="ad-btn">Remove</button>
+                            </form>
+                        </div>
+                    </div>
+                    <hr>
+                {% endfor %}
+                
+                <p style="margin-bottom: 5px;">Total Price: ${{totalPrice}}</p>
+                <form method="POST">
+                    <a href="checkout.html"><button type="button" class="ad-btn">Order!</button></a>
+                </form>
+            {% else %}
+                <div style="text-align: center;">
+                    <p style="margin-bottom: 15px;">You currently have no items in your cart!</p>
+                    <a href="shop.html"><button type="button" class="ad-btn">Shop Here!</button></a>
+                </div>
+            {% endif %}
+        </div>
+    </main>
+{% endblock %}
