@@ -158,7 +158,6 @@ def loadshop():
 
     return render_template('shop.html', products=products, product_sizes=product_sizes, product_colors=product_colors, product_categories=product_categories)
 
-
 @app.route('/shop.html', methods=['POST'])
 def saveiteminfo():
     session['itemID'] = request.form.get('id')
@@ -168,10 +167,15 @@ def saveiteminfo():
     session['itemImage'] = request.form.get('image')
     return redirect(url_for('loaditem'))
 
+
 @app.route('/item.html')
 def loaditem():
-    itemID = session.get('itemID')
+    itemID = session.get('itemID')  # Retrieve the productID from the session
 
+    if not itemID:
+        return "Product not found", 404  # Handle case where itemID is not set
+
+    # Get product-related colors and sizes (using itemID)
     color_query = text("SELECT DISTINCT Color FROM Product_Color WHERE productID = :id")
     colors = [row[0] for row in conn.execute(color_query, {'id': itemID})]
     session['item_colors'] = colors
@@ -180,31 +184,35 @@ def loaditem():
     sizes = [row[0] for row in conn.execute(size_query, {'id': itemID})]
     session['item_sizes'] = sizes
 
+    # Get inventory status
     inventory_query = text("SELECT DISTINCT inventory FROM products WHERE productID = :id")
     inventory = conn.execute(inventory_query, {'id': itemID}).scalar()
     session['item_inventory'] = inventory
 
-    query = f"select * from reviews natural join customer natural join users where productID = {itemID}"
+    # Get reviews for the product and apply sorting/filtering
+    query = f"SELECT * FROM reviews NATURAL JOIN customer NATURAL JOIN users WHERE productID = :id"
+
     filterRating = request.args.get('filterRating')
     sortBy = request.args.get('sortBy')
 
     if filterRating:
-        query += f" and Rating = {filterRating}"
+        query += f" AND Rating = :filterRating"
 
     if sortBy == "date_desc":
-        query += " order by Date desc"
+        query += " ORDER BY Date DESC"
     elif sortBy == "date_asc":
-        query += " order by Date asc"
+        query += " ORDER BY Date ASC"
     elif sortBy == "rating_desc":
-        query += " order by Rating desc"
+        query += " ORDER BY Rating DESC"
     elif sortBy == "rating_asc":
-        query += " order by Rating asc"
+        query += " ORDER BY Rating ASC"
     else:
-        query += " order by Date desc"
+        query += " ORDER BY Date DESC"
 
-    reviewList = list(conn.execute(text(query)))
+    reviewList = list(conn.execute(text(query), {'id': itemID, 'filterRating': filterRating}))
 
     return render_template('item.html', reviewList=reviewList, colors=colors, sizes=sizes, inventory=inventory)
+
 
 @app.route('/item.html', methods=['POST'])
 def addtocart():
@@ -992,6 +1000,7 @@ def chat_inbox():
         return "Unauthorized", 403
 
     return render_template('chat_inbox.html', chats=chats, account_type=account_type)
+
 
 
 @app.route('/rehash_passwords')
